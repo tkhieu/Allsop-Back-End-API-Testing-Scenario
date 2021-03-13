@@ -1,68 +1,65 @@
-using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Service.API.Identity.Models;
 
 namespace Service.API.Identity.Infrastructure
 {
-    public class AppUserStore: IUserStore<AppUser>, IUserPasswordStore<AppUser>, IUserEmailStore<AppUser>
+    public class AppUserStore: IUserStore<IdentityUser>, IUserPasswordStore<IdentityUser>, IUserEmailStore<IdentityUser>
     {
         public void Dispose()
         {
         }
 
-        public Task<string> GetUserIdAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.Id);
         }
 
-        public Task<string> GetUserNameAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.Username);
+            return Task.FromResult(user.UserName);
         }
 
-        public Task SetUserNameAsync(AppUser user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(IdentityUser user, string userName, CancellationToken cancellationToken)
         {
-            user.Username = userName;
+            user.UserName = userName;
             return Task.CompletedTask;
         }
 
-        public Task<string> GetNormalizedUserNameAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.NormalizeUsername);
+            return Task.FromResult(user.NormalizedUserName);
         }
 
-        public Task SetNormalizedUserNameAsync(AppUser user, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken)
         {
-            user.NormalizeUsername = normalizedName.ToLower();
+            user.NormalizedUserName = normalizedName.ToLower();
             return Task.CompletedTask;
         }
 
-        public Task<IdentityResult> CreateAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
         {
-            UserRepository.Users.Add(new AppUser()
+            UserRepository.Users.Add(new IdentityUser()
             {
                 Id = user.Id,
                 Email = user.Email,
-                NormalizeUsername = user.NormalizeUsername,
+                NormalizedUserName = user.NormalizedUserName,
                 PasswordHash = user.PasswordHash,
-                Username = user.Username
+                UserName = user.UserName
             });
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<IdentityResult> UpdateAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
  
             if (appUser != null)
             {
-                appUser.NormalizeUsername = user.NormalizeUsername;
-                appUser.Username = user.Username;
-                appUser.NormalizeEmail = user.NormalizeUsername;
+                appUser.NormalizedUserName = user.NormalizedUserName;
+                appUser.UserName = user.UserName;
+                appUser.NormalizedEmail = user.NormalizedUserName;
                 appUser.Email = user.Email;
                 appUser.PasswordHash = user.PasswordHash;
                 appUser.EmailConfirmed = user.EmailConfirmed;
@@ -71,7 +68,7 @@ namespace Service.API.Identity.Infrastructure
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<IdentityResult> DeleteAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
             if (appUser != null)
@@ -81,33 +78,33 @@ namespace Service.API.Identity.Infrastructure
             return Task.FromResult(IdentityResult.Success);
         }
         
-        public Task<AppUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.Id == userId));
         }
 
-        public Task<AppUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.NormalizeUsername == normalizedUserName));
+            return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.NormalizedUserName == normalizedUserName));
         }
 
-        public Task SetPasswordHashAsync(AppUser user, string passwordHash, CancellationToken cancellationToken)
+        public Task SetPasswordHashAsync(IdentityUser user, string passwordHash, CancellationToken cancellationToken)
         {
             user.PasswordHash = passwordHash;
             return Task.CompletedTask;
         }
 
-        public Task<string> GetPasswordHashAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetPasswordHashAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.PasswordHash);
         }
 
-        public Task<bool> HasPasswordAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<bool> HasPasswordAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult(user.PasswordHash != null);
         }
 
-        public Task SetEmailAsync(AppUser user, string email, CancellationToken cancellationToken)
+        public Task SetEmailAsync(IdentityUser user, string email, CancellationToken cancellationToken)
         {
             var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
             if (appUser != null)
@@ -117,34 +114,34 @@ namespace Service.API.Identity.Infrastructure
             return Task.CompletedTask;
         }
 
-        public Task<string> GetEmailAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetEmailAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             return Task.FromResult<string>(user.Email);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<bool> GetEmailConfirmedAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task SetEmailConfirmedAsync(AppUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetEmailConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<AppUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public Task<IdentityUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.Email == normalizedEmail));
         }
 
-        public Task<string> GetNormalizedEmailAsync(AppUser user, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedEmailAsync(IdentityUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult<string>(user.NormalizeEmail);
+            return Task.FromResult<string>(user.NormalizedEmail);
         }
 
-        public Task SetNormalizedEmailAsync(AppUser user, string normalizedEmail, CancellationToken cancellationToken)
+        public Task SetNormalizedEmailAsync(IdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            user.NormalizeEmail = normalizedEmail.ToLower();
+            user.NormalizedEmail = normalizedEmail.ToLower();
             return Task.CompletedTask;
         }
     }

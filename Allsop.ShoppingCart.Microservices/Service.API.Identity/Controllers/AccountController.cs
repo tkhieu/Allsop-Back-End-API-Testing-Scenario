@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Service.API.Identity.Models;
 using Service.API.Identity.ViewModels;
 
 namespace Service.API.Identity.Controllers
@@ -10,9 +9,9 @@ namespace Service.API.Identity.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<AppUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public AccountController(UserManager<AppUser> userManager)
+        public AccountController(UserManager<IdentityUser> userManager)
         {
             this._userManager = userManager;
         }
@@ -42,10 +41,10 @@ namespace Service.API.Identity.Controllers
                 };
             }
 
-            user = new AppUser()
+            user = new IdentityUser()
             {
                 Id = Guid.NewGuid().ToString(),
-                Username = model.Username,
+                UserName = model.Username,
                 Email = model.Email
             };
 

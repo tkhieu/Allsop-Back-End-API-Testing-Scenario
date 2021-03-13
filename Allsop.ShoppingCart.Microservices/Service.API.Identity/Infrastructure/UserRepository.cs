@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using Service.API.Identity.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Service.API.Identity.Infrastructure
 {
     public static class UserRepository
     {
-        public static List<AppUser> Users;
+        public static List<IdentityUser> Users;
 
         static UserRepository()
         {
-            Users = new List<AppUser>();
+            Users = new List<IdentityUser>();
         }
     }
 }

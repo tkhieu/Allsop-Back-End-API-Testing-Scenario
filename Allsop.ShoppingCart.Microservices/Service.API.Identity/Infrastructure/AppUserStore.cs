@@ -1,44 +1,20 @@
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace Service.API.Identity.Infrastructure
 {
-    public class AppUserStore: IUserStore<IdentityUser>, IUserPasswordStore<IdentityUser>, IUserEmailStore<IdentityUser>
+    public class AppUserStore : UserStoreBase<IdentityUser, string, IdentityUserClaim<string>, IdentityUserLogin<string>
+        , IdentityUserToken<string>>
     {
-        public void Dispose()
+        public AppUserStore(IdentityErrorDescriber describer) : base(describer)
         {
         }
 
-        public Task<string> GetUserIdAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.Id);
-        }
-
-        public Task<string> GetUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.UserName);
-        }
-
-        public Task SetUserNameAsync(IdentityUser user, string userName, CancellationToken cancellationToken)
-        {
-            user.UserName = userName;
-            return Task.CompletedTask;
-        }
-
-        public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.NormalizedUserName);
-        }
-
-        public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken)
-        {
-            user.NormalizedUserName = normalizedName.ToLower();
-            return Task.CompletedTask;
-        }
-
-        public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
+        public override Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken = new CancellationToken())
         {
             UserRepository.Users.Add(new IdentityUser()
             {
@@ -51,7 +27,7 @@ namespace Service.API.Identity.Infrastructure
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken)
+        public override Task<IdentityResult> UpdateAsync(IdentityUser user, CancellationToken cancellationToken = new CancellationToken())
         {
             var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
  
@@ -68,7 +44,7 @@ namespace Service.API.Identity.Infrastructure
             return Task.FromResult(IdentityResult.Success);
         }
 
-        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
+        public override Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken = new CancellationToken())
         {
             var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
             if (appUser != null)
@@ -77,72 +53,97 @@ namespace Service.API.Identity.Infrastructure
             }
             return Task.FromResult(IdentityResult.Success);
         }
-        
-        public Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+
+        public override Task<IdentityUser> FindByIdAsync(string userId, CancellationToken cancellationToken = new CancellationToken())
         {
             return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.Id == userId));
         }
 
-        public Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public override Task<IdentityUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = new CancellationToken())
         {
             return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.NormalizedUserName == normalizedUserName));
         }
 
-        public Task SetPasswordHashAsync(IdentityUser user, string passwordHash, CancellationToken cancellationToken)
+        protected override Task<IdentityUser> FindUserAsync(string userId, CancellationToken cancellationToken)
         {
-            user.PasswordHash = passwordHash;
-            return Task.CompletedTask;
+            return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.Id == userId));
         }
 
-        public Task<string> GetPasswordHashAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.PasswordHash);
-        }
-
-        public Task<bool> HasPasswordAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(user.PasswordHash != null);
-        }
-
-        public Task SetEmailAsync(IdentityUser user, string email, CancellationToken cancellationToken)
-        {
-            var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
-            if (appUser != null)
-            {
-                appUser.Email = email;
-            }
-            return Task.CompletedTask;
-        }
-
-        public Task<string> GetEmailAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult<string>(user.Email);
-        }
-
-        public Task<bool> GetEmailConfirmedAsync(IdentityUser user, CancellationToken cancellationToken)
+        protected override Task<IdentityUserLogin<string>> FindUserLoginAsync(string userId, string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task SetEmailConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        protected override Task<IdentityUserLogin<string>> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IdentityUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public override Task<IList<Claim>> GetClaimsAsync(IdentityUser user, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task AddClaimsAsync(IdentityUser user, IEnumerable<Claim> claims,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task ReplaceClaimAsync(IdentityUser user, Claim claim, Claim newClaim,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task RemoveClaimsAsync(IdentityUser user, IEnumerable<Claim> claims,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task<IList<IdentityUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override Task<IdentityUserToken<string>> FindTokenAsync(IdentityUser user, string loginProvider, string name, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override Task AddUserTokenAsync(IdentityUserToken<string> token)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        protected override Task RemoveUserTokenAsync(IdentityUserToken<string> token)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override IQueryable<IdentityUser> Users { get; }
+
+        public override Task AddLoginAsync(IdentityUser user, UserLoginInfo login,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task RemoveLoginAsync(IdentityUser user, string loginProvider, string providerKey,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task<IList<UserLoginInfo>> GetLoginsAsync(IdentityUser user, CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Task<IdentityUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = new CancellationToken())
         {
             return Task.FromResult(UserRepository.Users.FirstOrDefault(u => u.Email == normalizedEmail));
-        }
-
-        public Task<string> GetNormalizedEmailAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task.FromResult<string>(user.NormalizedEmail);
-        }
-
-        public Task SetNormalizedEmailAsync(IdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
-        {
-            user.NormalizedEmail = normalizedEmail.ToLower();
-            return Task.CompletedTask;
         }
     }
 }

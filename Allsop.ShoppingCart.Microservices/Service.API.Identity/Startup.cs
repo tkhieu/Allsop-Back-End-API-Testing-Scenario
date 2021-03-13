@@ -28,7 +28,7 @@ namespace Service.API.Identity
             // DbContext
             services.AddDbContext<IdentityDbContext>(options =>
             {
-                options.UseSqlite((@"Data Source=./identity.db"));
+                options.UseSqlite(@"Data Source=./identity.db",  b => b.MigrationsAssembly("Service.API.Identity"));
             });
             
             services.AddIdentityCore<IdentityUser>(options => { });

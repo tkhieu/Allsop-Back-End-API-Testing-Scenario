@@ -37,7 +37,7 @@ namespace Service.API.Identity.Infrastructure
 
         public Task SetNormalizedUserNameAsync(AppUser user, string normalizedName, CancellationToken cancellationToken)
         {
-            user.NormalizeUsername = normalizedName;
+            user.NormalizeUsername = normalizedName.ToLower();
             return Task.CompletedTask;
         }
 
@@ -62,8 +62,10 @@ namespace Service.API.Identity.Infrastructure
             {
                 appUser.NormalizeUsername = user.NormalizeUsername;
                 appUser.Username = user.Username;
+                appUser.NormalizeEmail = user.NormalizeUsername;
                 appUser.Email = user.Email;
                 appUser.PasswordHash = user.PasswordHash;
+                appUser.EmailConfirmed = user.EmailConfirmed;
             }
  
             return Task.FromResult(IdentityResult.Success);
@@ -142,11 +144,7 @@ namespace Service.API.Identity.Infrastructure
 
         public Task SetNormalizedEmailAsync(AppUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            var appUser = UserRepository.Users.FirstOrDefault(u => u.Id == user.Id);
-            if (appUser != null)
-            {
-                appUser.NormalizeUsername = normalizedEmail;
-            }
+            user.NormalizeEmail = normalizedEmail.ToLower();
             return Task.CompletedTask;
         }
     }

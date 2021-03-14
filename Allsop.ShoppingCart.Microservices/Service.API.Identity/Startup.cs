@@ -26,6 +26,11 @@ namespace Service.API.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Read AppSettings
+
+            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+            
             // DbContext
             services.AddDbContext<IdentityDbContext>(options =>
             {

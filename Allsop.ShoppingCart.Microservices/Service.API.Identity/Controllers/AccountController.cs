@@ -2,6 +2,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Service.API.Identity.Infrastructure;
 using Service.API.Identity.Services.Account;
 using Service.API.Identity.ViewModels;
 
@@ -12,12 +15,14 @@ namespace Service.API.Identity.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private IAccountService _accountService;
+        private readonly IOptions<AppSettings> _configuration;
 
 
-        public AccountController(UserManager<IdentityUser> userManager, AccountService accountService)
+        public AccountController(UserManager<IdentityUser> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
         {
             this._userManager = userManager;
             this._accountService = accountService;
+            this._configuration = appSettings;
         }
 
         [HttpPost]
@@ -29,7 +34,7 @@ namespace Service.API.Identity.Controllers
                 {
                     Status = Status.Error,
                     Message = "Invalid Data",
-                    Data = { }
+                    Data = {}
                 };
             }
 
@@ -88,9 +93,9 @@ namespace Service.API.Identity.Controllers
 
             return new ResultViewModel()
             {
-                Status = Status.Error,
-                Message = "User create error",
-                Data = response
+                Status = Status.Success,
+                Message = "Authenticate success",
+                Data =  _configuration.Value.JWT.Secret
             };
         }
     }

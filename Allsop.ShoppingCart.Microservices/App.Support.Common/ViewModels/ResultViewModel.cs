@@ -1,4 +1,4 @@
-namespace Service.API.Identity.ViewModels
+namespace App.Support.Common.ViewModels
 {
     public class ResultViewModel
     {

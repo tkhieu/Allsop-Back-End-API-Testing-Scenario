@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using App.Support.Common.Models;
+using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,14 +13,14 @@ using Service.API.Identity.ViewModels;
 namespace Service.API.Identity.Controllers
 {
     [Route("api/[controller]/[action]")]
-    public class AccountController : Controller
+    public class AccountsController : Controller
     {
         private readonly UserManager<Account> _userManager;
         private readonly IAccountService _accountService;
         private readonly IOptions<AppSettings> _configuration;
 
 
-        public AccountController(UserManager<Account> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
+        public AccountsController(UserManager<Account> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
         {
             this._userManager = userManager;
             this._accountService = accountService;

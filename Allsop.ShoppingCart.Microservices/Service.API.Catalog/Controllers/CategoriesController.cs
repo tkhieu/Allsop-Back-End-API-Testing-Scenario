@@ -7,14 +7,16 @@ using Service.API.Catalog.Repositories;
 
 namespace Service.API.Catalog.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class CategoriesController : Controller
     {
-        private ICategoryRepository _repository;
+        private ICategoryRepository _categoryRepository;
+        private IProductRepository _productRepository;
 
-        public CategoriesController(CategoryRepository repository)
+        public CategoriesController(CategoryRepository categoryRepository, ProductRepository productRepository)
         {
-            this._repository = repository;
+            this._categoryRepository = categoryRepository;
+            this._productRepository = productRepository;
         }
         
         [HttpGet]
@@ -23,7 +25,19 @@ namespace Service.API.Catalog.Controllers
         {
             return new ResultViewModel()
             {
-                Data = this._repository.GetCategories().ToList(),
+                Data = this._categoryRepository.GetCategories().ToList(),
+                Message = "Success",
+                Status = Status.Success
+            };
+        }
+        
+        [HttpGet("{categoryId:Guid}")]
+        [Authorize]
+        public async Task<ResultViewModel> GetProductsByCategoryId(string categoryId)
+        {
+            return new ResultViewModel()
+            {
+                Data = this._productRepository.GetProductsByCategoryId(categoryId),
                 Message = "Success",
                 Status = Status.Success
             };

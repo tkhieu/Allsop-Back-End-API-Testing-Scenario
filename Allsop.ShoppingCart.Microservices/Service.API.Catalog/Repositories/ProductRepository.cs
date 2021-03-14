@@ -44,5 +44,10 @@ namespace Service.API.Catalog.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public object GetProductsByCategoryId(string categoryId)
+        {
+            return _context.Products.Include("Category").Where(p => p.Category.Id == categoryId).ToList();
+        }
     }
 }

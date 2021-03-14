@@ -7,7 +7,7 @@ using Service.API.Catalog.Repositories;
 
 namespace Service.API.Catalog.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     public class ProductsController : Controller
     {
         private IProductRepository _repository;

@@ -10,5 +10,6 @@ namespace Service.API.Catalog.Repositories
         void DeleteProduct(int productId);
         void UpdateProduct(App.Support.Common.Models.Product product);
         void Save();
+        object GetProductsByCategoryId(string categoryId);
     }
 }

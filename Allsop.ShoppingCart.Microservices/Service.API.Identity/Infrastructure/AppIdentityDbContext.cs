@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Service.API.Identity.Infrastructure
 {
-    public class AppDbContext: IdentityDbContext<Account>
+    public class AppIdentityDbContext: IdentityDbContext<Account>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
+        public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options)
             : base(options)
         {
         }

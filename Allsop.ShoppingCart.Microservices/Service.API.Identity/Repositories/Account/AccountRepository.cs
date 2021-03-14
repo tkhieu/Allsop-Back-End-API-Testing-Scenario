@@ -10,9 +10,9 @@ namespace Service.API.Identity.Infrastructure
 {
     public class AccountRepository: IAccountRepository
     {
-        private AppDbContext _context;
+        private AppIdentityDbContext _context;
         
-        public AccountRepository(AppDbContext context)
+        public AccountRepository(AppIdentityDbContext context)
         {
             this._context = context;
         }

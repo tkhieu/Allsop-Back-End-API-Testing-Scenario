@@ -33,13 +33,13 @@ namespace Service.API.Identity
             services.Configure<AppSettings>(appSettings);
             
             // DbContext
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<AppIdentityDbContext>(options =>
             {
                 options.UseSqlite(@"Data Source=./identity.db",  b => b.MigrationsAssembly("Service.API.Identity"));
             });
             
             services.AddIdentityCore<Account>(options => { });
-            services.AddScoped<IUserStore<Account>, UserOnlyStore<Account, AppDbContext>>();
+            services.AddScoped<IUserStore<Account>, UserOnlyStore<Account, AppIdentityDbContext>>();
             services.AddScoped<AccountRepository>();
             services.AddScoped<AccountService>();
 

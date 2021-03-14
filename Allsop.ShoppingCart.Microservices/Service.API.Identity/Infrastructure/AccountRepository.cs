@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using App.Support.Common.Models;
 using Microsoft.AspNetCore.Identity;
-using Service.API.Identity.Models;
 
 namespace Service.API.Identity.Infrastructure
 {

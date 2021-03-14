@@ -3,8 +3,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using App.Support.Common.Models;
 using Microsoft.AspNetCore.Identity;
-using Service.API.Identity.Models;
 
 namespace Service.API.Identity.Infrastructure
 {

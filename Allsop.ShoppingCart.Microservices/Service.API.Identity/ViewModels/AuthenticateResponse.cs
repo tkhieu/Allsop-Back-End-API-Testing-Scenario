@@ -1,4 +1,4 @@
-using Service.API.Identity.Models;
+using App.Support.Common.Models;
 
 namespace Service.API.Identity.ViewModels
 {

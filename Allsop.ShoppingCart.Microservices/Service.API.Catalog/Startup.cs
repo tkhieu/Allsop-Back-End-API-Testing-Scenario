@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Catalog.Infrastructure;
+using Service.API.Catalog.Repositories;
 
 namespace Service.API.Catalog
 {
@@ -54,6 +55,9 @@ namespace Service.API.Catalog
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Service.API.Catalog", Version = "v1"});
             });
+
+            services.AddScoped<CategoryRepository>();
+            services.AddScoped<CatalogDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

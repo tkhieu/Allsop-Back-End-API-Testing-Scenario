@@ -1,3 +1,4 @@
+using System;
 using App.Support.Common.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +10,16 @@ namespace Service.API.Catalog.Infrastructure
             : base(options)
         {
         }
-        
-        private DbSet<Category> Categories;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Category>().HasData(
+                new Category(){Id = new Guid().ToString(),Name = "A"}
+                );
+            
+            base.OnModelCreating(modelBuilder);
+        }
+
+        public DbSet<Category> Categories { get; set; }
     }
 }

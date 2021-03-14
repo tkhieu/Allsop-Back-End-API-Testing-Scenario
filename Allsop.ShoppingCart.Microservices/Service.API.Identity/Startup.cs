@@ -32,7 +32,7 @@ namespace Service.API.Identity
             services.Configure<AppSettings>(appSettings);
             
             // DbContext
-            services.AddDbContext<IdentityDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseSqlite(@"Data Source=./identity.db",  b => b.MigrationsAssembly("Service.API.Identity"));
             });

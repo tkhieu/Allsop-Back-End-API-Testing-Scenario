@@ -1,4 +1,6 @@
 using System.Linq;
+using App.Support.Common;
+using Microsoft.Extensions.Options;
 using Service.API.Identity.Infrastructure;
 using Service.API.Identity.ViewModels;
 
@@ -6,13 +8,26 @@ namespace Service.API.Identity.Services.Account
 {
     public class AccountService: IAccountService
     {
+        private readonly IOptions<AppSettings> _appSettings;
+        private AccountRepository _accountRepository;
+
+        public AccountService(IOptions<AppSettings> appSettings, AccountRepository accountRepository)
+        {
+            this._appSettings = appSettings;
+            this._accountRepository = accountRepository;
+        }
+        
         public AuthenticateResponse Authenticate(AuthenticateRequestViewModel model)
         {
 
-            var account = AccountRepository.Accounts.FirstOrDefault(a => a.NormalizedEmail == model.Email);
+            var account = _accountRepository.GetAccounts().FirstOrDefault(a => a.NormalizedEmail == model.Email.ToLower());
+
+            var jwtHelper = new JwtHelper();
+            var token = jwtHelper.generateJwtToken(account, _appSettings.Value);
+            
             if (account != null)
             {
-                return new AuthenticateResponse(null, "token");
+                return new AuthenticateResponse(null, token);
             }
 
             return null;

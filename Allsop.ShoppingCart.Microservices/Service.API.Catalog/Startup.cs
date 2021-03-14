@@ -57,6 +57,7 @@ namespace Service.API.Catalog
             });
 
             services.AddScoped<CategoryRepository>();
+            services.AddScoped<ProductRepository>();
             services.AddScoped<CatalogDbContext>();
         }
 

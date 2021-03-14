@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Service.API.Identity.Services.Account;
 using Service.API.Identity.ViewModels;
 
 namespace Service.API.Identity.Controllers
@@ -10,10 +11,13 @@ namespace Service.API.Identity.Controllers
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
+        private IAccountService _accountService;
 
-        public AccountController(UserManager<IdentityUser> userManager)
+
+        public AccountController(UserManager<IdentityUser> userManager, AccountService accountService)
         {
             this._userManager = userManager;
+            this._accountService = accountService;
         }
 
         [HttpPost]
@@ -64,6 +68,29 @@ namespace Service.API.Identity.Controllers
                 Status = Status.Error,
                 Message = "User create error",
                 Data = result.Errors
+            };
+        }
+
+        [HttpPost]
+        public async Task<ResultViewModel> Authenticate([FromBody] AuthenticateRequestViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new ResultViewModel()
+                {
+                    Status = Status.Error,
+                    Message = "Invalid Data",
+                    Data = { }
+                };
+            }
+
+            var response = _accountService.Authenticate(model);
+
+            return new ResultViewModel()
+            {
+                Status = Status.Error,
+                Message = "User create error",
+                Data = response
             };
         }
     }

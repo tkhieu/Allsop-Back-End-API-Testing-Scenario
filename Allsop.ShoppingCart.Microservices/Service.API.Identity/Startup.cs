@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Service.API.Identity.Infrastructure;
+using Service.API.Identity.Services.Account;
 
 namespace Service.API.Identity
 {
@@ -33,6 +34,7 @@ namespace Service.API.Identity
             
             services.AddIdentityCore<IdentityUser>(options => { });
             services.AddScoped<IUserStore<IdentityUser>, UserOnlyStore<IdentityUser, IdentityDbContext>>();
+            services.AddScoped<AccountService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

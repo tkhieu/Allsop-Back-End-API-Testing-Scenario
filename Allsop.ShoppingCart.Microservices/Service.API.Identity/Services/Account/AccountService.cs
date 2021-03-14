@@ -9,7 +9,7 @@ namespace Service.API.Identity.Services.Account
         public AuthenticateResponse Authenticate(AuthenticateRequestViewModel model)
         {
 
-            var account = UserRepository.Users.FirstOrDefault(a => a.NormalizedEmail == model.Email);
+            var account = AccountRepository.Accounts.FirstOrDefault(a => a.NormalizedEmail == model.Email);
             if (account != null)
             {
                 return new AuthenticateResponse(null, "token");

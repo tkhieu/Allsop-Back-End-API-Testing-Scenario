@@ -1,4 +1,5 @@
 using System;
+using App.Support.Common.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -37,8 +38,9 @@ namespace Service.API.Identity
                 options.UseSqlite(@"Data Source=./identity.db",  b => b.MigrationsAssembly("Service.API.Identity"));
             });
             
-            services.AddIdentityCore<IdentityUser>(options => { });
-            services.AddScoped<IUserStore<IdentityUser>, UserOnlyStore<IdentityUser, IdentityDbContext>>();
+            services.AddIdentityCore<Account>(options => { });
+            services.AddScoped<IUserStore<Account>, UserOnlyStore<Account, AppDbContext>>();
+            services.AddScoped<AccountRepository>();
             services.AddScoped<AccountService>();
 
             services.AddControllers();

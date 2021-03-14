@@ -17,7 +17,7 @@ namespace App.Support.Common
             var key = Encoding.ASCII.GetBytes(appSettings.JWT.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id.ToString()) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", account.Id) }),
                 Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

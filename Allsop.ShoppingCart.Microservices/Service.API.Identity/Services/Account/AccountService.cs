@@ -9,7 +9,7 @@ namespace Service.API.Identity.Services.Account
     public class AccountService: IAccountService
     {
         private readonly IOptions<AppSettings> _appSettings;
-        private AccountRepository _accountRepository;
+        private readonly AccountRepository _accountRepository;
 
         public AccountService(IOptions<AppSettings> appSettings, AccountRepository accountRepository)
         {
@@ -20,14 +20,14 @@ namespace Service.API.Identity.Services.Account
         public AuthenticateResponse Authenticate(AuthenticateRequestViewModel model)
         {
 
-            var account = _accountRepository.GetAccounts().FirstOrDefault(a => a.NormalizedEmail == model.Email.ToLower());
+            var account = _accountRepository.GetAccounts().FirstOrDefault(a => a.NormalizedEmail == model.Email.ToUpper());
 
             var jwtHelper = new JwtHelper();
             var token = jwtHelper.generateJwtToken(account, _appSettings.Value);
             
             if (account != null)
             {
-                return new AuthenticateResponse(null, token);
+                return new AuthenticateResponse(account, token);
             }
 
             return null;

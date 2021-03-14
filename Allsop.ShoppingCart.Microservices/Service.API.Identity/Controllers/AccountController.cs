@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using App.Support.Common.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,12 +14,12 @@ namespace Service.API.Identity.Controllers
     [Route("api/[controller]/[action]")]
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private IAccountService _accountService;
+        private readonly UserManager<Account> _userManager;
+        private readonly IAccountService _accountService;
         private readonly IOptions<AppSettings> _configuration;
 
 
-        public AccountController(UserManager<IdentityUser> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
+        public AccountController(UserManager<Account> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
         {
             this._userManager = userManager;
             this._accountService = accountService;
@@ -50,7 +51,7 @@ namespace Service.API.Identity.Controllers
                 };
             }
 
-            user = new IdentityUser()
+            user = new Account()
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = model.Username,
@@ -95,7 +96,7 @@ namespace Service.API.Identity.Controllers
             {
                 Status = Status.Success,
                 Message = "Authenticate success",
-                Data =  _configuration.Value.JWT.Secret
+                Data =  response
             };
         }
     }

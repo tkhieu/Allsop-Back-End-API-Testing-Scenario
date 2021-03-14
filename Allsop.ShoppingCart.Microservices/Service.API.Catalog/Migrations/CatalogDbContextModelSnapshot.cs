@@ -14,6 +14,63 @@ namespace Service.API.Catalog.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.4");
+
+            modelBuilder.Entity("App.Support.Common.Models.Category", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Code");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "c96fcfac-75dc-404f-a055-729c00401c94",
+                            Code = "MP",
+                            Name = "Meat & Poultry"
+                        },
+                        new
+                        {
+                            Id = "60e9b1f2-85cb-4473-b8a6-69698df23f05",
+                            Code = "FV",
+                            Name = "Fruit & Vegetables"
+                        },
+                        new
+                        {
+                            Id = "4e1d143a-3bcd-43b9-b4bd-9f18fa091c84",
+                            Code = "DR",
+                            Name = "Drinks"
+                        },
+                        new
+                        {
+                            Id = "c3177fbe-f6d5-43d5-b170-4f4fb9ff23b4",
+                            Code = "CD",
+                            Name = "Confectionary & Desserts"
+                        },
+                        new
+                        {
+                            Id = "e0c21b31-3fb4-4f12-b3aa-82436e001867",
+                            Code = "CI",
+                            Name = "Baking/Cooking Ingredients"
+                        },
+                        new
+                        {
+                            Id = "68a87921-f52b-472d-9833-5f21d002231f",
+                            Code = "MI",
+                            Name = "Miscellaneous Items"
+                        });
+                });
 #pragma warning restore 612, 618
         }
     }

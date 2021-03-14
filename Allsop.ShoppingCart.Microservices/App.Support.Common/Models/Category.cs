@@ -3,12 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Support.Common.Models
 {
+    [Table("Categories")]
     public class Category
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public string Id { get; set; }
+        public string Id { get; init; }
         
-        public string Name { get; set; }
+        [Column(name: "Name")]
+        public string Name { get; init; }
+        
+        [Column(name: "Code")]
+        public string Code { get; init; }
     }
 }

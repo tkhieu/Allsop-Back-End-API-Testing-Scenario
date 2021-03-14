@@ -19,7 +19,6 @@ namespace Service.API.Identity.Infrastructure
         
         public void Dispose()
         {
-            throw new System.NotImplementedException();
         }
 
         public IEnumerable<Account> GetAccounts()

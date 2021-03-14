@@ -2,7 +2,7 @@
 
 namespace Service.API.Catalog.Migrations
 {
-    public partial class CreateAndSeedCategories : Migration
+    public partial class CreateAndSeedCategoriesAndProducts : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,9 +26,10 @@ namespace Service.API.Catalog.Migrations
                     Id = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
                     Packaging = table.Column<string>(type: "TEXT", nullable: true),
-                    Code = table.Column<string>(type: "TEXT", nullable: true),
+                    Sku = table.Column<string>(type: "TEXT", nullable: true),
                     CategoryId = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<string>(type: "TEXT", nullable: true),
+                    PriceValue = table.Column<decimal>(type: "TEXT", nullable: false),
+                    PriceUnit = table.Column<string>(type: "TEXT", nullable: true),
                     InventoryQuantity = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -45,32 +46,37 @@ namespace Service.API.Catalog.Migrations
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "9580adac-4659-4ff8-8061-b47f825ea98b", "MP", "Meat & Poultry" });
+                values: new object[] { "5beff28e-bba2-4b1b-9f06-126d6365d4cf", "MP", "Meat & Poultry" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "321d66d0-6fc7-4fbe-9c2c-9d8e15c9e328", "FV", "Fruit & Vegetables" });
+                values: new object[] { "fd6055d7-08a3-4351-8195-7da47e50f028", "FV", "Fruit & Vegetables" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "01e6e9e1-67df-4f72-96b8-7cc95f0f40bd", "DR", "Drinks" });
+                values: new object[] { "737c9710-e069-436a-a236-660e8277dedf", "DR", "Drinks" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "fe60ab82-1f5b-431b-b0af-193a4893ae9c", "CD", "Confectionary & Desserts" });
+                values: new object[] { "bae52764-af07-4043-8586-52816594ee86", "CD", "Confectionary & Desserts" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "5892511d-746f-407f-92b1-9421bd91ad10", "CI", "Baking/Cooking Ingredients" });
+                values: new object[] { "3786f39a-a229-4689-aed7-d851082cd87a", "CI", "Baking/Cooking Ingredients" });
 
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
-                values: new object[] { "788695dc-8187-460c-80c9-037b001f1147", "MI", "Miscellaneous Items" });
+                values: new object[] { "b5901197-4899-4a22-ad39-7f1f4cdcb84b", "MI", "Miscellaneous Items" });
+
+            migrationBuilder.InsertData(
+                table: "Products",
+                columns: new[] { "Id", "CategoryId", "InventoryQuantity", "Name", "Packaging", "PriceUnit", "PriceValue", "Sku" },
+                values: new object[] { "0fc7414b-80b9-48fb-b547-c74be11f0f71", "5beff28e-bba2-4b1b-9f06-126d6365d4cf", 12, "Chicken Fillets", "6 x 100g", "GBP", 4.50m, "MP-000001" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",

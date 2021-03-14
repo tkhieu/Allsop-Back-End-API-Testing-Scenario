@@ -15,11 +15,13 @@ namespace App.Support.Common.Models
         
         public string Packaging { get; init; }
         
-        public string Code { get; init; }
+        public string Sku { get; init; }
         
         public Category Category { get; set; }
         
-        public string Price { get; set; }
+        public decimal PriceValue { get; set; }
+        
+        public string PriceUnit { get; set; }
         
         public int InventoryQuantity { get; set; }
     }

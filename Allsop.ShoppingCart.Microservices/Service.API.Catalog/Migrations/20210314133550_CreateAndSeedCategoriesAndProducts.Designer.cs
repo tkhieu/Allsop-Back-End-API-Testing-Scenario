@@ -8,8 +8,8 @@ using Service.API.Catalog.Infrastructure;
 namespace Service.API.Catalog.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20210314120309_CreateAndSeedCategories")]
-    partial class CreateAndSeedCategories
+    [Migration("20210314133550_CreateAndSeedCategoriesAndProducts")]
+    partial class CreateAndSeedCategoriesAndProducts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,37 +38,37 @@ namespace Service.API.Catalog.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9580adac-4659-4ff8-8061-b47f825ea98b",
+                            Id = "5beff28e-bba2-4b1b-9f06-126d6365d4cf",
                             Code = "MP",
                             Name = "Meat & Poultry"
                         },
                         new
                         {
-                            Id = "321d66d0-6fc7-4fbe-9c2c-9d8e15c9e328",
+                            Id = "fd6055d7-08a3-4351-8195-7da47e50f028",
                             Code = "FV",
                             Name = "Fruit & Vegetables"
                         },
                         new
                         {
-                            Id = "01e6e9e1-67df-4f72-96b8-7cc95f0f40bd",
+                            Id = "737c9710-e069-436a-a236-660e8277dedf",
                             Code = "DR",
                             Name = "Drinks"
                         },
                         new
                         {
-                            Id = "fe60ab82-1f5b-431b-b0af-193a4893ae9c",
+                            Id = "bae52764-af07-4043-8586-52816594ee86",
                             Code = "CD",
                             Name = "Confectionary & Desserts"
                         },
                         new
                         {
-                            Id = "5892511d-746f-407f-92b1-9421bd91ad10",
+                            Id = "3786f39a-a229-4689-aed7-d851082cd87a",
                             Code = "CI",
                             Name = "Baking/Cooking Ingredients"
                         },
                         new
                         {
-                            Id = "788695dc-8187-460c-80c9-037b001f1147",
+                            Id = "b5901197-4899-4a22-ad39-7f1f4cdcb84b",
                             Code = "MI",
                             Name = "Miscellaneous Items"
                         });
@@ -83,9 +83,6 @@ namespace Service.API.Catalog.Migrations
                     b.Property<string>("CategoryId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("InventoryQuantity")
                         .HasColumnType("INTEGER");
 
@@ -95,7 +92,13 @@ namespace Service.API.Catalog.Migrations
                     b.Property<string>("Packaging")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Price")
+                    b.Property<string>("PriceUnit")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PriceValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Sku")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -103,6 +106,19 @@ namespace Service.API.Catalog.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "0fc7414b-80b9-48fb-b547-c74be11f0f71",
+                            CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf",
+                            InventoryQuantity = 12,
+                            Name = "Chicken Fillets",
+                            Packaging = "6 x 100g",
+                            PriceUnit = "GBP",
+                            PriceValue = 4.50m,
+                            Sku = "MP-000001"
+                        });
                 });
 
             modelBuilder.Entity("App.Support.Common.Models.Product", b =>

@@ -9,6 +9,7 @@ namespace Service.API.Catalog.Controllers
     public class CategoriesController : Controller
     {
         [HttpGet]
+        [Authorize]
         public async Task<ResultViewModel> Index()
         {
             return new ResultViewModel();

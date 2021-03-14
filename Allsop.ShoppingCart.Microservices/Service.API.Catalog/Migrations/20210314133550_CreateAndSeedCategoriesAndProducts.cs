@@ -72,12 +72,7 @@ namespace Service.API.Catalog.Migrations
                 table: "Categories",
                 columns: new[] { "Id", "Code", "Name" },
                 values: new object[] { "b5901197-4899-4a22-ad39-7f1f4cdcb84b", "MI", "Miscellaneous Items" });
-
-            migrationBuilder.InsertData(
-                table: "Products",
-                columns: new[] { "Id", "CategoryId", "InventoryQuantity", "Name", "Packaging", "PriceUnit", "PriceValue", "Sku" },
-                values: new object[] { "0fc7414b-80b9-48fb-b547-c74be11f0f71", "5beff28e-bba2-4b1b-9f06-126d6365d4cf", 12, "Chicken Fillets", "6 x 100g", "GBP", 4.50m, "MP-000001" });
-
+            
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",

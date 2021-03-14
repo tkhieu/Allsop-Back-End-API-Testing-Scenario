@@ -25,8 +25,14 @@ namespace Service.API.Catalog.Infrastructure
             );
             
             modelBuilder.Entity<Product>().HasData(
-                new { Id = "0fc7414b-80b9-48fb-b547-c74be11f0f71",Name = "Chicken Fillets", Packaging = "6 x 100g", PriceValue = 4.50m, PriceUnit = "GBP" , InventoryQuantity = 12, Sku="MP-000001", CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf" }
+                new { Id = "48d5553e-a450-4523-a143-73263766b62b",Name = "Chicken Fillets",     Packaging = "6 x 100g",                         PriceValue = 4.50m,     PriceUnit = "GBP" , InventoryQuantity = 12, Sku="MP-000001", CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf" },
+                new { Id = "e547f80c-55ff-4541-81e7-d84f55cfdae2",Name = "Sirloin Steaks",      Packaging = "4 x 6-8oz",                        PriceValue = 45.70m,    PriceUnit = "GBP" , InventoryQuantity = 6,  Sku="MP-000002", CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf" },
+                
+                new { Id = "34f98921-e46a-4937-872b-e2c57e705f3f",Name = "Cauliflower Florets", Packaging = "10 x 500g", OldPriceValue = 6.75m, PriceValue = 5.00m,     PriceUnit = "GBP" , InventoryQuantity = 5,  Sku="FV-000001", CategoryId = "fd6055d7-08a3-4351-8195-7da47e50f028" }
             );
+            
+            
+            
             
             base.OnModelCreating(modelBuilder);
         }

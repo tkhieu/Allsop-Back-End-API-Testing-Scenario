@@ -8,8 +8,8 @@ using Service.API.Catalog.Infrastructure;
 namespace Service.API.Catalog.Migrations
 {
     [DbContext(typeof(CatalogDbContext))]
-    [Migration("20210314133550_CreateAndSeedCategoriesAndProducts")]
-    partial class CreateAndSeedCategoriesAndProducts
+    [Migration("20210314151551_AddColumnOldPriceValueToProducts")]
+    partial class AddColumnOldPriceValueToProducts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -89,6 +89,9 @@ namespace Service.API.Catalog.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("OldPriceValue")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Packaging")
                         .HasColumnType("TEXT");
 
@@ -106,7 +109,6 @@ namespace Service.API.Catalog.Migrations
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
-                    
                 });
 
             modelBuilder.Entity("App.Support.Common.Models.Product", b =>

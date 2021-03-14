@@ -21,6 +21,8 @@ namespace App.Support.Common.Models
         
         public decimal PriceValue { get; set; }
         
+        public decimal? OldPriceValue { get; set; }
+        
         public string PriceUnit { get; set; }
         
         public int InventoryQuantity { get; set; }

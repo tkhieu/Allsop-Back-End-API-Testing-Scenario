@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Cart.Infrastructure;
 using Service.API.Cart.Repositories.Cart;
+using Service.API.Cart.Services.Cart;
 using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Cart
@@ -69,6 +70,7 @@ namespace Service.API.Cart
             });
 
             services.AddScoped<CartRepository>();
+            services.AddScoped<CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

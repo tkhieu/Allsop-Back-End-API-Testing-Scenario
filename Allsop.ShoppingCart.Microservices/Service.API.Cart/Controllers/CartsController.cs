@@ -1,8 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Cart.Repositories.Cart;
+using Service.API.Cart.Services.Cart;
 
 namespace Service.API.Cart.Controllers
 {
@@ -10,10 +12,12 @@ namespace Service.API.Cart.Controllers
     public class CartsController : Controller
     {
         private readonly ICartRepository _cartRepository;
+        private readonly ICartService _cartService;
         
-        public CartsController(CartRepository cartRepository)
+        public CartsController(CartRepository cartRepository, CartService cartService)
         {
             this._cartRepository = cartRepository;
+            this._cartService = cartService;
         }
         
         // GET
@@ -25,19 +29,29 @@ namespace Service.API.Cart.Controllers
         {
             var userId = HttpContext.Items["UserId"]?.ToString();
 
-            var cart = _cartRepository.GetCartByAccountId(userId);
-
-            if (cart == null)
+            if (userId != null)
             {
-                cart = new App.Support.Common.Models.Cart();
+                var cart = _cartRepository.GetCartByAccountId(userId);
+
+                if (cart == null)
+                {
+                    cart = _cartService.GenerateAnEmptyCart(Guid.Parse(userId));
+                }
+            
+                return new ResultViewModel()
+                {
+                    Data = cart,
+                    Message = "Message",
+                    Status = Status.Success
+                };
             }
             
             return new ResultViewModel()
             {
-                Data = cart,
+                Data = null,
                 Message = "Message",
-                Status = Status.Success
+                Status = Status.Error
             };
-        }
+        } 
     }
 }

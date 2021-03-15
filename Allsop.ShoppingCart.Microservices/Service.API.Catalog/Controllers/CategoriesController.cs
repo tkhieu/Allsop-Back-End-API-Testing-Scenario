@@ -21,7 +21,6 @@ namespace Service.API.Catalog.Controllers
         }
         
         [HttpGet]
-        [Authorize]
         public async Task<ResultViewModel> Index()
         {
             return new ResultViewModel()

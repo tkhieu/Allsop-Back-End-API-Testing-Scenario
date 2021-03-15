@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "App.Support.Common.Protos.Catalog";
+
+package catalog;
+
+service Product {
+  rpc GetProduct (GetSingleProductRequest) returns (ReturnSingleProduct);
+}
+
+message GetSingleProductRequest {
+  string Id = 1;
+}
+
+message Category {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+}
+
+message ReturnSingleProduct {
+  
+  string id = 1;
+  string name = 2;
+  string packaging = 3;
+  string sku = 4;
+  Category category = 5;
+  double priceValue = 6;
+  google.protobuf.Any oldPriceValue = 7;
+  string priceUnit = 8;
+  uint32 inventoryQuantity = 9;
+}

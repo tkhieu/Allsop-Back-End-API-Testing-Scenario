@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Service.API.Catalog.Infrastructure;
 using Service.API.Catalog.Repositories.Category;
 using Service.API.Catalog.Repositories.Product;
+using Service.API.Catalog.Services.gRPC;
 using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Catalog
@@ -65,6 +66,9 @@ namespace Service.API.Catalog
             services.AddScoped<CategoryRepository>();
             services.AddScoped<ProductRepository>();
             services.AddScoped<CatalogDbContext>();
+            
+            // gRPC
+            services.AddGrpc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,7 +91,11 @@ namespace Service.API.Catalog
             
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGrpcService<ProductService>();
+            });
         }
     }
 }

@@ -6,16 +6,19 @@
 
     <ItemGroup>
         <PackageReference Include="Google.Protobuf" Version="3.15.6" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.35.0" />
         <PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
         <PackageReference Include="Grpc.Tools" Version="2.36.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.4" />
         <PackageReference Include="NodaMoney" Version="1.0.5" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
+        <!--gRPC-->
+        <Protobuf Include="Protos\catalog.proto" GrpcServices="Server" />
     </ItemGroup>
 
 </Project>

@@ -98,15 +98,15 @@ namespace Service.API.Cart.Controllers
                     AddedAt = DateTime.Now,
                     CartId = cart.Id
                 };
-                _cartItemRepository.InsertCartItem(cartItem);
+                await _cartItemRepository.InsertCartItem(cartItem);
             }
             else
             {
                 cartItem.Quantity = model.Quantity;
-                _cartItemRepository.UpdateCartItem(cartItem);
+                await _cartItemRepository.UpdateCartItem(cartItem);
             }
 
-            _cartRepository.InsertCart(cart);
+            await _cartRepository.InsertCart(cart);
             return new ResultViewModel()
             {
                 Data = cart,
@@ -159,15 +159,18 @@ namespace Service.API.Cart.Controllers
             }
             else
             {
-                cartItem.Quantity += model.Quantity;
-                if (cartItem.Quantity == 0)
+                if (cartItem != null)
                 {
-                    _cartItemRepository.DeleteCartItem(cartItem);
-                }
-                else
-                {
-                    await _cartRepository.UpdateCart(cart);
-                    await _cartItemRepository.UpdateCartItem(cartItem);
+                    cartItem.Quantity += model.Quantity;
+                    if (cartItem.Quantity == 0)
+                    {
+                        _cartItemRepository.DeleteCartItem(cartItem);
+                    }
+                    else
+                    {
+                        await _cartRepository.UpdateCart(cart);
+                        await _cartItemRepository.UpdateCartItem(cartItem);
+                    }
                 }
             }
             

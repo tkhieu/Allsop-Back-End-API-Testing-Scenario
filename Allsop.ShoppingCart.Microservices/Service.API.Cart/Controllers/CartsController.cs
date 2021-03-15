@@ -10,7 +10,7 @@ namespace Service.API.Cart.Controllers
     public class CartsController : Controller
     {
         private readonly ICartRepository _cartRepository;
-
+        
         public CartsController(CartRepository cartRepository)
         {
             this._cartRepository = cartRepository;
@@ -19,12 +19,22 @@ namespace Service.API.Cart.Controllers
         // GET
         
         [HttpGet]
+        [Route("Me")]
         [Authorize]
-        public async Task<ResultViewModel> Index()
+        public async Task<ResultViewModel> GetCart()
         {
+            var userId = HttpContext.Items["UserId"]?.ToString();
+
+            var cart = _cartRepository.GetCartByAccountId(userId);
+
+            if (cart == null)
+            {
+                cart = new App.Support.Common.Models.Cart();
+            }
+            
             return new ResultViewModel()
             {
-                Data = HttpContext.Items["UserId"],
+                Data = cart,
                 Message = "Message",
                 Status = Status.Success
             };

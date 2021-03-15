@@ -15,7 +15,7 @@ namespace Service.API.Cart.Repositories.Cart
         
         public App.Support.Common.Models.Cart GetCartByAccountId(string accountId)
         {
-            return this._context.Carts.FirstOrDefault(c => c.AccountId.ToString() == accountId);
+            return this._context.Carts.FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
         }
 
         public void InsertCart(App.Support.Common.Models.Cart cart)

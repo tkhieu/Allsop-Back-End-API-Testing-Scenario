@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using App.Support.Common.Configurations;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,15 +28,15 @@ namespace Service.API.Cart.Controllers
         [Authorize]
         public async Task<ResultViewModel> GetCart()
         {
-            var userId = HttpContext.Items["UserId"]?.ToString();
+            var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
-            if (userId != null)
+            if (accountId != null)
             {
-                var cart = _cartRepository.GetCartByAccountId(userId);
+                var cart = _cartRepository.GetCartByAccountId(accountId);
 
                 if (cart == null)
                 {
-                    cart = _cartService.GenerateAnEmptyCart(Guid.Parse(userId));
+                    cart = _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
                 }
             
                 return new ResultViewModel()

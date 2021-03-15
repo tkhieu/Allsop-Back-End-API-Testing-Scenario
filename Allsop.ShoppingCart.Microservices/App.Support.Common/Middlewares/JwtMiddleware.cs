@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Support.Common.Configurations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -48,10 +49,10 @@ namespace App.Support.Common.Middlewares
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = jwtToken.Claims.First(x => x.Type == "id").Value;
+                var accountId = jwtToken.Claims.First(x => x.Type == "id").Value;
                 
                 // attach user to context on successful jwt validation
-                context.Items["UserId"] = userId;
+                context.Items[AppConsts.HttpContextItemAccountId] = accountId;
             }
             catch
             {

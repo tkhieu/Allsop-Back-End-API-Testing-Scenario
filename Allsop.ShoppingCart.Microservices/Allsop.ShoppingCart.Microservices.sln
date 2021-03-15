@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.API.Cart", "Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.API.Promotion", "Service.API.Promotion\Service.API.Promotion.csproj", "{56D03D8E-D4FD-4CA2-AA6D-1BD1EE8DECE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.API.Ordering", "Service.API.Ordering\Service.API.Ordering.csproj", "{982E4446-ECC7-4E62-B1D8-38CB84CD0FB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{56D03D8E-D4FD-4CA2-AA6D-1BD1EE8DECE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56D03D8E-D4FD-4CA2-AA6D-1BD1EE8DECE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56D03D8E-D4FD-4CA2-AA6D-1BD1EE8DECE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982E4446-ECC7-4E62-B1D8-38CB84CD0FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982E4446-ECC7-4E62-B1D8-38CB84CD0FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982E4446-ECC7-4E62-B1D8-38CB84CD0FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982E4446-ECC7-4E62-B1D8-38CB84CD0FB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

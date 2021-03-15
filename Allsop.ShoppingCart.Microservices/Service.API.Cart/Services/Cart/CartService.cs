@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using App.Support.Common.Models;
 
 namespace Service.API.Cart.Services.Cart
@@ -11,7 +12,8 @@ namespace Service.API.Cart.Services.Cart
             {
                 AccountId = accountId,
                 CreatedAt = DateTime.Now,
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
+                Items = new List<CartItem>()
             };
 
             return cart;

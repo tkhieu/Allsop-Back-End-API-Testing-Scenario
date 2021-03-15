@@ -35,7 +35,7 @@ namespace Service.API.Cart
         public void ConfigureServices(IServiceCollection services)
         {
             // Read AppSettings
-            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
             
             // DbContext
@@ -74,6 +74,8 @@ namespace Service.API.Cart
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMiddleware<JwtMiddleware>();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -85,10 +87,10 @@ namespace Service.API.Cart
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            
             app.UseAuthorization();
             
-            app.UseMiddleware<JwtMiddleware>();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

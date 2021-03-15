@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using App.Support.Common.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Cart.Repositories.Cart;
 
@@ -16,12 +17,11 @@ namespace Service.API.Cart.Controllers
         }
         
         // GET
+        
         [HttpGet]
+        [Authorize]
         public async Task<ResultViewModel> Index()
         {
-            
-            
-            
             return new ResultViewModel()
             {
                 Data = HttpContext.Items["UserId"],

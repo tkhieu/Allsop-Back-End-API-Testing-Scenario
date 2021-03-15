@@ -1,4 +1,5 @@
 using System.Text;
+using App.Support.Common.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +10,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Catalog.Infrastructure;
-using Service.API.Catalog.Repositories;
 using Service.API.Catalog.Repositories.Category;
 using Service.API.Catalog.Repositories.Product;
 using Service.API.Identity.Infrastructure;
@@ -29,7 +29,7 @@ namespace Service.API.Catalog
         public void ConfigureServices(IServiceCollection services)
         {
             // Read AppSettings
-            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            var appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
             
             // DbContext
@@ -37,7 +37,6 @@ namespace Service.API.Catalog
             {
                 options.UseSqlite(@"Data Source=./catalog.db",  b => b.MigrationsAssembly("Service.API.Catalog"));
             });
-
             
             services.AddAuthentication(options =>
                 {
@@ -71,8 +70,7 @@ namespace Service.API.Catalog
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseAuthentication();
-            app.UseAuthorization();
+            app.UseMiddleware<JwtMiddleware>();
             
             if (env.IsDevelopment())
             {
@@ -84,10 +82,10 @@ namespace Service.API.Catalog
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
             
             app.UseAuthentication();
+            
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

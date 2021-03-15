@@ -12,6 +12,7 @@ using Service.API.Catalog.Infrastructure;
 using Service.API.Catalog.Repositories;
 using Service.API.Catalog.Repositories.Category;
 using Service.API.Catalog.Repositories.Product;
+using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Catalog
 {
@@ -27,6 +28,10 @@ namespace Service.API.Catalog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Read AppSettings
+            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+            
             // DbContext
             services.AddDbContext<CatalogDbContext>(options =>
             {

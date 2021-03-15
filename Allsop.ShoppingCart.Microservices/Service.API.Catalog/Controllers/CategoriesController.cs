@@ -12,8 +12,8 @@ namespace Service.API.Catalog.Controllers
     [Route("api/[controller]")]
     public class CategoriesController : Controller
     {
-        private ICategoryRepository _categoryRepository;
-        private IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
 
         public CategoriesController(CategoryRepository categoryRepository, ProductRepository productRepository)
         {

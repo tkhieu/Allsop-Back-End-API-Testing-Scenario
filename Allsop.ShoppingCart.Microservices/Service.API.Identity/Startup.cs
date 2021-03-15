@@ -28,7 +28,6 @@ namespace Service.API.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             // Read AppSettings
-
             IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettings);
             

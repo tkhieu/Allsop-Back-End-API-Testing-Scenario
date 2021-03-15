@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Support.Common.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Cart.Infrastructure;
+using Service.API.Cart.Repositories.Cart;
+using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Cart
 {
@@ -31,6 +34,10 @@ namespace Service.API.Cart
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Read AppSettings
+            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+            
             // DbContext
             services.AddDbContext<CartDbContext>(options =>
             {
@@ -60,6 +67,8 @@ namespace Service.API.Cart
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Service.API.Cart", Version = "v1"});
             });
+
+            services.AddScoped<CartRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -77,6 +86,8 @@ namespace Service.API.Cart
             app.UseRouting();
 
             app.UseAuthorization();
+            
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Catalog.Infrastructure;
 using Service.API.Catalog.Repositories;
+using Service.API.Catalog.Repositories.Category;
+using Service.API.Catalog.Repositories.Product;
 
 namespace Service.API.Catalog
 {

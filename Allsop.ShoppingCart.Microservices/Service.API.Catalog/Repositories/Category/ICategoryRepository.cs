@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Service.API.Catalog.Repositories
+namespace Service.API.Catalog.Repositories.Category
 {
     public interface ICategoryRepository
     {

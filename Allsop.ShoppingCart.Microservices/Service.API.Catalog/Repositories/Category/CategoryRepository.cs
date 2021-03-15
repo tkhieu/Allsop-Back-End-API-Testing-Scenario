@@ -1,30 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
-using App.Support.Common.Models;
 using Service.API.Catalog.Infrastructure;
 
-namespace Service.API.Catalog.Repositories
+namespace Service.API.Catalog.Repositories.Category
 {
     public class CategoryRepository: ICategoryRepository
     {
-        private CatalogDbContext _context;
+        private readonly CatalogDbContext _context;
 
         public CategoryRepository(CatalogDbContext context)
         {
             this._context = context;
         }
         
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<App.Support.Common.Models.Category> GetCategories()
         {
             return _context.Categories.ToList();
         }
 
-        public Category GetCategoryById(int categoryId)
+        public App.Support.Common.Models.Category GetCategoryById(int categoryId)
         {
             throw new System.NotImplementedException();
         }
 
-        public void InsertCategory(Category category)
+        public void InsertCategory(App.Support.Common.Models.Category category)
         {
             throw new System.NotImplementedException();
         }
@@ -34,7 +33,7 @@ namespace Service.API.Catalog.Repositories
             throw new System.NotImplementedException();
         }
 
-        public void UpdateCategory(Category category)
+        public void UpdateCategory(App.Support.Common.Models.Category category)
         {
             throw new System.NotImplementedException();
         }

@@ -21,6 +21,8 @@
     <ItemGroup>
       <Folder Include="Controllers" />
       <Folder Include="Migrations" />
+      <Folder Include="Repositories\Cart" />
+      <Folder Include="Repositories\CartItem" />
     </ItemGroup>
 
     <ItemGroup>

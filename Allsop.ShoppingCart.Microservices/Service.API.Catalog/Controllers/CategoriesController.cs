@@ -4,6 +4,8 @@ using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Catalog.Repositories;
+using Service.API.Catalog.Repositories.Category;
+using Service.API.Catalog.Repositories.Product;
 
 namespace Service.API.Catalog.Controllers
 {

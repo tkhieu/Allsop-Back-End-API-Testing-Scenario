@@ -16,6 +16,6 @@ namespace App.Support.Common.Models
         
         public DateTime CreatedAt { get; init; }
 
-        public ICollection<CartItem> Items { get; set; }
+        public ICollection<CartItem> CartItems { get; set; }
     }
 }

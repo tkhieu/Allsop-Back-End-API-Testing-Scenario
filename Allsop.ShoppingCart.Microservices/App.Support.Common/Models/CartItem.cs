@@ -11,12 +11,12 @@ namespace App.Support.Common.Models
         [Key]
         public string Id { get; init; }
         
-        public Guid ProductId { get; init; }
+        public string ProductId { get; init; }
         
-        public long Quantity { get; init; }
+        public long Quantity { get; set; }
         
         public DateTime AddedAt { get; set; }
 
-        public Cart Cart { get; set; }
+        public string CartId { get; set; }
     }
 }

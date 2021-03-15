@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Service.API.Cart.Infrastructure;
 
 namespace Service.API.Cart.Repositories.Cart
@@ -15,27 +17,42 @@ namespace Service.API.Cart.Repositories.Cart
         
         public App.Support.Common.Models.Cart GetCartByAccountId(string accountId)
         {
-            return this._context.Carts.FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
+            return this._context.Carts.Include("CartItems").FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
         }
 
-        public void InsertCart(App.Support.Common.Models.Cart cart)
+        public async Task<App.Support.Common.Models.Cart> InsertCart(App.Support.Common.Models.Cart cart)
         {
-            throw new System.NotImplementedException();
+            await this._context.Carts.AddAsync(cart);
+            await this._context.SaveChangesAsync();
+            return cart;
         }
 
-        public void DeleteCart(string cartId)
+        public void RemoveEmptyCart(App.Support.Common.Models.Cart cart)
         {
-            throw new NotImplementedException();
+            if(IsEmptyCart(cart)) DeleteCart(cart);
+        }
+
+        public bool IsEmptyCart(App.Support.Common.Models.Cart cart)
+        {
+            var count = cart.CartItems.Count;
+            return count == 0 || cart.CartItems.All(cartItem => cartItem.Quantity <= 0);
+        }
+
+        public async void DeleteCart(App.Support.Common.Models.Cart cart)
+        {
+            _context.Carts.Remove(cart);
+            await _context.SaveChangesAsync();
         }
         
-        public void UpdateCart(App.Support.Common.Models.Cart cart)
+        public async Task<App.Support.Common.Models.Cart> UpdateCart(App.Support.Common.Models.Cart cart)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public void Save()
-        {
-            throw new System.NotImplementedException();
+            var tempCart = _context.Carts.FirstOrDefault(c => c.Id == cart.Id);
+            if (tempCart == null)
+            {
+                await this._context.Carts.AddAsync(cart);
+            }
+            await this._context.SaveChangesAsync();
+            return cart;
         }
     }
 }

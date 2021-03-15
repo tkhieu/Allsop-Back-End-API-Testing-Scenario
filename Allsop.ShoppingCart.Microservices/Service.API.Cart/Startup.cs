@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Cart.Infrastructure;
 using Service.API.Cart.Repositories.Cart;
+using Service.API.Cart.Repositories.CartItem;
 using Service.API.Cart.Services.Cart;
 using Service.API.Identity.Infrastructure;
 
@@ -70,6 +71,7 @@ namespace Service.API.Cart
             });
 
             services.AddScoped<CartRepository>();
+            services.AddScoped<CartItemRepository>();
             services.AddScoped<CartService>();
         }
 

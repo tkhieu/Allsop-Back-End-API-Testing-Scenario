@@ -13,7 +13,7 @@ namespace Service.API.Cart.Services.Cart
                 AccountId = accountId,
                 CreatedAt = DateTime.Now,
                 Id = Guid.NewGuid().ToString(),
-                Items = new List<CartItem>()
+                CartItems = new List<CartItem>()
             };
 
             return cart;

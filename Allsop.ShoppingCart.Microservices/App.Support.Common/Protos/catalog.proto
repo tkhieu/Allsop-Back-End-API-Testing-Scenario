@@ -29,7 +29,7 @@ message ProductDTO {
   string sku = 4;
   CategoryDTO category = 5;
   common.DecimalValue priceValue = 6;
-  google.protobuf.Any oldPriceValue = 7;
+  common.DecimalValue oldPriceValue = 7;
   string priceUnit = 8;
   int32 inventoryQuantity = 9;
 }

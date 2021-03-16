@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 using App.Support.Common.Protos.Catalog;
+using App.Support.Common.Protos.Common;
+using Google.Protobuf.WellKnownTypes;
 using NodaMoney;
 
 namespace App.Support.Common.Models
@@ -47,9 +49,16 @@ namespace App.Support.Common.Models
                 InventoryQuantity = this.InventoryQuantity,
                 Packaging = this.Packaging,
                 PriceUnit = this.PriceUnit,
+                PriceValue = DecimalValue.FromDecimal(this.PriceValue),
+                
                 Sku = this.Sku,
                 Category = c
             };
+
+            if (this.OldPriceValue.HasValue)
+            {
+                p.OldPriceValue = DecimalValue.FromDecimal(this.OldPriceValue.Value);
+            }
 
             return p;
         }

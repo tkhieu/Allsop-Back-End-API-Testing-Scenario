@@ -52,7 +52,7 @@ namespace Service.API.Cart.Controllers
 
                 return new ResultViewModel
                 {
-                    Data = cart,
+                    Data = new CartViewModel(cart),
                     Message = "Success",
                     Status = Status.Success
                 };
@@ -89,7 +89,7 @@ namespace Service.API.Cart.Controllers
             if (model.Quantity <= 0)
                 return new ResultViewModel
                 {
-                    Data = cart,
+                    Data = new CartViewModel(cart),
                     Message = "Error: You can not insert a Cart Item with negative quantity",
                     Status = Status.Error
                 };
@@ -113,7 +113,7 @@ namespace Service.API.Cart.Controllers
             await _cartRepository.InsertCart(cart);
             return new ResultViewModel
             {
-                Data = cart,
+                Data = new CartViewModel(cart),
                 Message = "Success",
                 Status = Status.Success
             };
@@ -156,7 +156,7 @@ namespace Service.API.Cart.Controllers
             {
                 return new ResultViewModel
                 {
-                    Data = cart,
+                    Data = new CartViewModel(cart),
                     Message = "Error: You can not decrease a Cart Item quantity to negative",
                     Status = Status.Success
                 };
@@ -181,7 +181,7 @@ namespace Service.API.Cart.Controllers
             _cartRepository.RemoveEmptyCart(cart);
             return new ResultViewModel
             {
-                Data = cart,
+                Data = new CartViewModel(cart),
                 Message = "Success",
                 Status = Status.Success
             };
@@ -222,7 +222,7 @@ namespace Service.API.Cart.Controllers
 
             return new ResultViewModel
             {
-                Data = cart,
+                Data = new CartViewModel(cart),
                 Message = "Success",
                 Status = Status.Success
             };

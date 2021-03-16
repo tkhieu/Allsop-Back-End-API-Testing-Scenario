@@ -17,9 +17,11 @@
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.8.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.4" />
-        <!--gRPC-->
-        <Protobuf Include="Protos\catalog.proto" />
-        <Protobuf Include="Protos\common.proto" />
+    </ItemGroup>
+    <!--gRPC-->
+    <ItemGroup>
+        <Protobuf Include="Protos\common.proto" Link="Protos\common.proto" GrpcServices="Both" ProtoRoot="Protos\"/>
+        <Protobuf Include="Protos\catalog.proto" Link="Protos\catalog.proto" GrpcServices="Both" ProtoRoot="Protos\"/>
     </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using App.Support.Common.Protos.Catalog;
+using App.Support.Common.Protos.Common;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using Service.API.Catalog.Repositories.Product;

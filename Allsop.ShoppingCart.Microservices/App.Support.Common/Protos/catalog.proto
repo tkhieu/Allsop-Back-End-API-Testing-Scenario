@@ -8,7 +8,7 @@ option csharp_namespace = "App.Support.Common.Protos.Catalog";
 
 package catalog;
 
-service ProductGrpc {
+service CatalogGrpc {
   rpc GetProduct (GetSingleProductRequest) returns (ReturnSingleProduct);
 }
 

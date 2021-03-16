@@ -5,7 +5,6 @@ namespace Service.API.Cart.Repositories.Cart
 {
     public interface ICartRepository
     {
-        
         App.Support.Common.Models.Cart GetCartByAccountId(string accountId);
         Task<App.Support.Common.Models.Cart> InsertCart(App.Support.Common.Models.Cart cart);
         void RemoveEmptyCart(App.Support.Common.Models.Cart cart);

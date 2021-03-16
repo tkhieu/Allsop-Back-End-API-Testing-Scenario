@@ -7,12 +7,12 @@ using Service.API.Catalog.Repositories.Product;
 
 namespace Service.API.Catalog.Services.gRPC
 {
-    public class ProductService : ProductGrpc.ProductGrpcBase
+    public class CatalogGrpcService : CatalogGrpc.CatalogGrpcBase
     {
-        private readonly ILogger<ProductService> _logger;
+        private readonly ILogger<CatalogGrpcService> _logger;
         private readonly IProductRepository _productRepository;
 
-        public ProductService(ILogger<ProductService> logger, ProductRepository productRepository)
+        public CatalogGrpcService(ILogger<CatalogGrpcService> logger, ProductRepository productRepository)
         {
             _logger = logger;
             _productRepository = productRepository;

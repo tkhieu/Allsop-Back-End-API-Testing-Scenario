@@ -2,17 +2,16 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using App.Support.Common.Configurations;
+using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.ViewModels;
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Cart.Repositories.Cart;
 using Service.API.Cart.Repositories.CartItem;
 using Service.API.Cart.Services.Cart;
 using Service.API.Cart.ViewModels.Cart;
-using Status = App.Support.Common.ViewModels.Status;
 
 namespace Service.API.Cart.Controllers
 {
@@ -22,13 +21,15 @@ namespace Service.API.Cart.Controllers
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository _cartItemRepository;
         private readonly ICartService _cartService;
+        private readonly GrpcClientFactory _grpcClientFactory;
 
         public CartsController(CartRepository cartRepository, CartItemRepository cartItemRepository,
-            CartService cartService)
+            CartService cartService, GrpcClientFactory grpcClientFactory)
         {
-            this._cartRepository = cartRepository;
-            this._cartItemRepository = cartItemRepository;
-            this._cartService = cartService;
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+            _cartService = cartService;
+            _grpcClientFactory = grpcClientFactory;
         }
 
         // GET
@@ -49,7 +50,7 @@ namespace Service.API.Cart.Controllers
                     cart = _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
                 }
 
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = cart,
                     Message = "Success",
@@ -57,7 +58,7 @@ namespace Service.API.Cart.Controllers
                 };
             }
 
-            return new ResultViewModel()
+            return new ResultViewModel
             {
                 Data = null,
                 Message = "Error: You must login before add Cart Item into Cart",
@@ -73,7 +74,7 @@ namespace Service.API.Cart.Controllers
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
             if (accountId == null)
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = null,
                     Message = "Error: You must login before add Cart Item into Cart",
@@ -86,7 +87,7 @@ namespace Service.API.Cart.Controllers
             var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
 
             if (model.Quantity <= 0)
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = cart,
                     Message = "Error: You can not insert a Cart Item with negative quantity",
@@ -94,7 +95,7 @@ namespace Service.API.Cart.Controllers
                 };
             if (cartItem == null)
             {
-                cartItem = new CartItem()
+                cartItem = new CartItem
                 {
                     ProductId = model.ProductId,
                     Quantity = model.Quantity,
@@ -110,7 +111,7 @@ namespace Service.API.Cart.Controllers
             }
 
             await _cartRepository.InsertCart(cart);
-            return new ResultViewModel()
+            return new ResultViewModel
             {
                 Data = cart,
                 Message = "Success",
@@ -127,7 +128,7 @@ namespace Service.API.Cart.Controllers
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
             if (accountId == null)
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = null,
                     Message = "Error: You must login before add Cart Item into Cart",
@@ -141,7 +142,7 @@ namespace Service.API.Cart.Controllers
 
             if (cartItem == null && model.Quantity > 0)
             {
-                cartItem = new CartItem()
+                cartItem = new CartItem
                 {
                     ProductId = model.ProductId,
                     Quantity = model.Quantity,
@@ -153,7 +154,7 @@ namespace Service.API.Cart.Controllers
             }
             else if (cartItem == null && model.Quantity < 0)
             {
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = cart,
                     Message = "Error: You can not decrease a Cart Item quantity to negative",
@@ -178,7 +179,7 @@ namespace Service.API.Cart.Controllers
             }
             
             _cartRepository.RemoveEmptyCart(cart);
-            return new ResultViewModel()
+            return new ResultViewModel
             {
                 Data = cart,
                 Message = "Success",
@@ -194,7 +195,7 @@ namespace Service.API.Cart.Controllers
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
             if (accountId == null)
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = null,
                     Message = "Error: You must login before add Cart Item into Cart",
@@ -209,52 +210,19 @@ namespace Service.API.Cart.Controllers
 
             if (cartItem == null)
             {
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Data = null,
                     Message = "Error: Cart Item does not exist inside Cart",
                     Status = Status.Error
                 };
             }
-            else
-            {
-                _cartItemRepository.DeleteCartItem(cartItem);
-            }
 
-            return new ResultViewModel()
+            _cartItemRepository.DeleteCartItem(cartItem);
+
+            return new ResultViewModel
             {
                 Data = cart,
-                Message = "Success",
-                Status = Status.Success
-            };
-        }
-        
-        
-        [HttpPost]
-        [Route("TestGrpc")]
-        [Authorize]
-        public async Task<ResultViewModel> TestGrpc([FromBody] AdjustCartItemViewModel model)
-        {
-            var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
-
-            if (accountId == null)
-                return new ResultViewModel()
-                {
-                    Data = null,
-                    Message = "Error: You must login before add Cart Item into Cart",
-                    Status = Status.Error
-                };
-
-            using var channel = GrpcChannel.ForAddress("http://localhost:5001");
-            var client = new ProductGrpc.ProductGrpcClient(channel);
-            var reply = await client.GetProductAsync(new GetSingleProductRequest()
-            {
-                Id = model.ProductId
-            });
-            
-            return new ResultViewModel()
-            {
-                Data = reply,
                 Message = "Success",
                 Status = Status.Success
             };

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -73,6 +74,7 @@ namespace Service.API.Cart
             services.AddScoped<CartRepository>();
             services.AddScoped<CartItemRepository>();
             services.AddScoped<CartService>();
+            services.AddScoped<GrpcClientFactory>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

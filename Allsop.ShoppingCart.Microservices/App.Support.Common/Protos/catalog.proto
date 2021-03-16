@@ -6,7 +6,7 @@ option csharp_namespace = "App.Support.Common.Protos.Catalog";
 
 package catalog;
 
-service Product {
+service ProductGrpc {
   rpc GetProduct (GetSingleProductRequest) returns (ReturnSingleProduct);
 }
 
@@ -14,21 +14,44 @@ message GetSingleProductRequest {
   string Id = 1;
 }
 
-message Category {
+message CategoryDTO {
   string id = 1;
   string name = 2;
   string code = 3;
 }
 
-message ReturnSingleProduct {
-  
+message ProductDTO {
   string id = 1;
   string name = 2;
   string packaging = 3;
   string sku = 4;
-  Category category = 5;
-  double priceValue = 6;
+  CategoryDTO category = 5;
+  DecimalValue priceValue = 6;
   google.protobuf.Any oldPriceValue = 7;
   string priceUnit = 8;
-  uint32 inventoryQuantity = 9;
+  int32 inventoryQuantity = 9;
+}
+
+enum GrpcStatus {
+  ERROR = 0;
+  SUCCESS = 1;
+}
+
+message ReturnSingleProduct {
+  GrpcStatus status = 1;
+  ProductDTO product = 2;
+}
+
+message DecimalValue {
+
+  // The whole units of the amount.
+  int64 units = 1;
+
+  // Number of nano (10^-9) units of the amount.
+  // The value must be between -999,999,999 and +999,999,999 inclusive.
+  // If `units` is positive, `nanos` must be positive or zero.
+  // If `units` is zero, `nanos` can be positive, zero, or negative.
+  // If `units` is negative, `nanos` must be negative or zero.
+  // For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
+  int32 nanos = 2;
 }

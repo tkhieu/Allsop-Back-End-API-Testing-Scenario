@@ -3,13 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using App.Support.Common.Configurations;
 using App.Support.Common.Models;
+using App.Support.Common.Protos.Catalog;
 using App.Support.Common.ViewModels;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Cart.Repositories.Cart;
 using Service.API.Cart.Repositories.CartItem;
 using Service.API.Cart.Services.Cart;
 using Service.API.Cart.ViewModels.Cart;
+using Status = App.Support.Common.ViewModels.Status;
 
 namespace Service.API.Cart.Controllers
 {
@@ -221,6 +224,37 @@ namespace Service.API.Cart.Controllers
             return new ResultViewModel()
             {
                 Data = cart,
+                Message = "Success",
+                Status = Status.Success
+            };
+        }
+        
+        
+        [HttpPost]
+        [Route("TestGrpc")]
+        [Authorize]
+        public async Task<ResultViewModel> TestGrpc([FromBody] AdjustCartItemViewModel model)
+        {
+            var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
+
+            if (accountId == null)
+                return new ResultViewModel()
+                {
+                    Data = null,
+                    Message = "Error: You must login before add Cart Item into Cart",
+                    Status = Status.Error
+                };
+
+            using var channel = GrpcChannel.ForAddress("http://localhost:5001");
+            var client = new ProductGrpc.ProductGrpcClient(channel);
+            var reply = await client.GetProductAsync(new GetSingleProductRequest()
+            {
+                Id = model.ProductId
+            });
+            
+            return new ResultViewModel()
+            {
+                Data = reply,
                 Message = "Success",
                 Status = Status.Success
             };

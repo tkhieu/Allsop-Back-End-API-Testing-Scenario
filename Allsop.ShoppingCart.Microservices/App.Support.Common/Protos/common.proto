@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option csharp_namespace = "App.Support.Common.Protos.Common";
+
+package common;
+
+enum Status {
+  ERROR = 0;
+  SUCCESS = 1;
+}

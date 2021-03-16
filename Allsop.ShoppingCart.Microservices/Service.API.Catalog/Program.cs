@@ -23,8 +23,10 @@ namespace Service.API.Catalog
                 {
                     webBuilder.ConfigureKestrel(options =>
                     {
+                        options.ListenAnyIP(5001, listenOptions => 
+                            listenOptions.Protocols = HttpProtocols.Http1);
                         // Setup a HTTP/2 endpoint without TLS.
-                        options.ListenLocalhost(5001, o => o.Protocols = 
+                        options.ListenLocalhost(6001, o => o.Protocols = 
                             HttpProtocols.Http2);
                     });
                     webBuilder.UseStartup<Startup>();

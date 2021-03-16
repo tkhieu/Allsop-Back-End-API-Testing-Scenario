@@ -94,7 +94,7 @@ namespace Service.API.Catalog
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGrpcService<ProductService>();
+                endpoints.MapGrpcService<ProductService>().RequireHost("*:6001");
             });
         }
     }

@@ -19,9 +19,9 @@ namespace Service.API.Catalog.Repositories.Product
             return _context.Products.Include("Category").ToList();
         }
 
-        public App.Support.Common.Models.Product GetProductById(int productId)
+        public App.Support.Common.Models.Product GetProductById(string productId)
         {
-            throw new System.NotImplementedException();
+            return _context.Products.Include("Category").FirstOrDefault(p => p.Id == productId);
         }
 
         public void InsertProduct(App.Support.Common.Models.Product product)

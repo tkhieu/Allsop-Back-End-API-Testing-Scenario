@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using App.Support.Common.Configurations;
 using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models.CartService;
+using App.Support.Common.Protos.Promotion;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -147,7 +148,20 @@ namespace Service.API.Cart.Controllers
             var cart =  _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            await _cartService.AddDiscountCodeToCart(cart, model.DiscountCode);
+
+            await _cartService.RemoveDiscountCode(cart);
+            var validateDiscountCodeDto =  await _cartService.AddDiscountCodeToCart(cart, model.DiscountCode);
+
+            if (!validateDiscountCodeDto.IsValid)
+            {
+                return new ResultViewModel
+                {
+                    Data = validateDiscountCodeDto,
+                    Message = "Add discount code error",
+                    Status = Status.Error
+                };
+            }
+            
             var cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel

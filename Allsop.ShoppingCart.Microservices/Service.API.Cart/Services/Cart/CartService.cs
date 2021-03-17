@@ -52,7 +52,7 @@ namespace Service.API.Cart.Services.Cart
             return product;
         }
 
-        public async Task<bool> ValidateDiscountCode(App.Support.Common.Models.CartService.Cart cart,
+        public async Task<ValidateDiscountCodeDTO> ValidateDiscountCode(App.Support.Common.Models.CartService.Cart cart,
             string discountCode)
         {
             var promotionGrpcClient = _grpcClientFactory.CreatePromotionGrpcClient();
@@ -62,7 +62,14 @@ namespace Service.API.Cart.Services.Cart
                 Cart = cart.GenerateCartDto()
             };
             var response = await promotionGrpcClient.ValidateDiscountCodeAsync(rq);
-            return response.Status == GrpcStatus.Success && response.ValidateDiscountCode.IsValid;
+            return response.ValidateDiscountCode;
+        }
+
+        public async Task<bool> RemoveDiscountCode(App.Support.Common.Models.CartService.Cart cart)
+        {
+            cart.DiscountCode = null;
+            await _cartRepository.InsertOrUpdateCart(cart);
+            return true;
         }
 
         public async Task<DiscountCampaignDTO> GetDiscountCampaignDetail(string discountCode)
@@ -118,19 +125,16 @@ namespace Service.API.Cart.Services.Cart
             
         }
 
-        public async Task<bool> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode)
+        public async Task<ValidateDiscountCodeDTO> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode)
         {
-            var codeValid = await ValidateDiscountCode(cart, discountCode);
-            
-            if (!codeValid) return false;
+            var validateDiscountCodeDto = await ValidateDiscountCode(cart, discountCode);
+
+            if (!validateDiscountCodeDto.IsValid) return validateDiscountCodeDto;
             
             cart.DiscountCode = discountCode;
             await _cartRepository.InsertOrUpdateCart(cart);
-
-            return true;
-
-
-
+            
+            return validateDiscountCodeDto;
         }
     }
 }

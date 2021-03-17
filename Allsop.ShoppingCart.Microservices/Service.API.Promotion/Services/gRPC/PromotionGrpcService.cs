@@ -46,7 +46,7 @@ namespace Service.API.Promotion.Services.gRPC
 
         public override async Task<ReturnValidateDiscountCode> ValidateDiscountCode(ValidateDiscountCodeWithCartRequest request, ServerCallContext context)
         {
-            string discountCode = request.DiscountCode;
+            var discountCode = request.DiscountCode;
             
             var discountCodeObj = await _discountCodeRepository.GetDiscountCodeByCode(discountCode);
             
@@ -56,14 +56,27 @@ namespace Service.API.Promotion.Services.gRPC
 
             var cartDto = request.Cart;
 
-            ReturnValidateDiscountCode returnValidateDiscountCode = new ReturnValidateDiscountCode()
+            var validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+            {
+                IsValid = true,
+                Message = "Discount code is valid to use"
+            };
+            
+            var redemptionsCount = discountCodeObj.Redemptions?.Count ?? 0;
+            
+            if (discountCodeObj.MaxRedeem == redemptionsCount)
+            {
+                validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                {
+                    IsValid = false,
+                    Message = "This code already excess max redemption"
+                };
+            }
+            
+            var returnValidateDiscountCode = new ReturnValidateDiscountCode()
             {
                 Status = GrpcStatus.Success,
-                ValidateDiscountCode = new ValidateDiscountCodeDTO()
-                {
-                    IsValid = true,
-                    Message = "Passed"
-                }
+                ValidateDiscountCode = validateDiscountCodeDto
             };
 
             return returnValidateDiscountCode;

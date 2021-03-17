@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using App.Support.Common.Models.PromotionService.DiscountValidations;
 using App.Support.Common.Protos.Common;
 using App.Support.Common.Protos.Promotion;
 using Grpc.Core;
@@ -62,6 +64,8 @@ namespace Service.API.Promotion.Services.gRPC
                 Message = "Discount code is valid to use"
             };
             
+            
+            // Check redemptionCount
             var redemptionsCount = discountCodeObj.Redemptions?.Count ?? 0;
             
             if (discountCodeObj.MaxRedeem == redemptionsCount)
@@ -72,13 +76,111 @@ namespace Service.API.Promotion.Services.gRPC
                     Message = "This code already excess max redemption"
                 };
             }
+            // Check expirationDate
+            if (discountCampaignObj.ExpirationDate < DateTime.Now)
+            {
+                validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                {
+                    IsValid = false,
+                    Message = "This code already expired"
+                };
+            }
             
+            // Check startDate
+            if (discountCampaignObj.StartDate > DateTime.Now)
+            {
+                validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                {
+                    IsValid = false,
+                    Message = "This campaign not yet start"
+                };
+            }
+            
+            // Check discountValidations
+            var discountValidations = discountCampaignObj.DiscountValidations;
+            foreach (var discountValidation in discountValidations)
+            {
+                switch (discountValidation.ValueType)
+                {
+                    case DiscountValidationValueType.Bill:
+                    {
+                        switch (discountValidation.Operator)
+                        {
+                            case DiscountValidationOperator.MoreThan:
+                            {
+                                break;   
+                            }
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
+                    }
+                    case DiscountValidationValueType.Quantity:
+                    {
+                        switch (discountValidation.Operator)
+                        {
+                            case DiscountValidationOperator.MoreThan:
+                            {
+                                
+                                break;   
+                            }
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
+                    }
+                    case DiscountValidationValueType.ProductCat:
+                    {
+                        switch (discountValidation.Operator)
+                        {
+                            case DiscountValidationOperator.Is:
+                            {
+                                break;   
+                            }
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
+                    }
+
+                    case DiscountValidationValueType.SpendingAmount:
+                    {
+                        switch (discountValidation.Operator)
+                        {
+                            case DiscountValidationOperator.MoreThan:
+                            {
+                                
+                                break;   
+                            }
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
+                    }
+                    case DiscountValidationValueType.Product:
+                        break;
+                    case DiscountValidationValueType.DateTime:
+                        break;
+                    case DiscountValidationValueType.RedeemsTime:
+                        break;
+                    case DiscountValidationValueType.RedeemsPerUser:
+                        break;
+                    case DiscountValidationValueType.RedeemsPerUserPerDay:
+                        break;
+                    case DiscountValidationValueType.TotalDiscountAmount:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+
+            // Return
             var returnValidateDiscountCode = new ReturnValidateDiscountCode()
             {
                 Status = GrpcStatus.Success,
                 ValidateDiscountCode = validateDiscountCodeDto
             };
-
             return returnValidateDiscountCode;
         }
     }

@@ -1,9 +1,7 @@
 namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
 {
-    public enum DiscountUnit
+    public enum DiscountCampaignScope
     {
-        Money,
-        Percentage,
-        Product
+        Global = 1
     }
 }

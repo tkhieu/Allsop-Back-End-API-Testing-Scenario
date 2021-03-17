@@ -2,6 +2,8 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
 {
     public enum DiscountCampaignType
     {
-        Global = 1
+        Money = 1,
+        Percentage = 2,
+        Product = 3
     }
 }

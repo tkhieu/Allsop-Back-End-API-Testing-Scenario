@@ -1,13 +1,11 @@
-using System;
-using System.Text.Json.Serialization;
+using App.Support.Common.Models.PromotionService.DiscountValidations;
 
 namespace Service.API.Promotion.ViewModels
 {
     public class DiscountValidationRequestViewModel
     {
-        public string Rule { get; set; }
-        public string Operator { get; set; }
-        public string ValueType { get; set; }
+        public DiscountValidationOperator Operator { get; set; }
+        public DiscountValidationValueType ValueType { get; set; }
         public string Value { get; set; }
     }
 }

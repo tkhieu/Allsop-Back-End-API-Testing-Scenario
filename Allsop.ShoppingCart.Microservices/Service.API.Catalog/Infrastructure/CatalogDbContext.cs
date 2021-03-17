@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using App.Support.Common.Models;
+using App.Support.Common.Models.CatalogService;
 using Microsoft.EntityFrameworkCore;
 using NodaMoney;
 

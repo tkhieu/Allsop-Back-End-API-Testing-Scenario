@@ -14,17 +14,17 @@ namespace Service.API.Catalog.Repositories.Product
             this._context = context;
         }
         
-        public IEnumerable<App.Support.Common.Models.Product> GetProducts()
+        public IEnumerable<App.Support.Common.Models.CatalogService.Product> GetProducts()
         {
             return _context.Products.Include("Category").ToList();
         }
 
-        public App.Support.Common.Models.Product GetProductById(string productId)
+        public App.Support.Common.Models.CatalogService.Product GetProductById(string productId)
         {
             return _context.Products.Include("Category").FirstOrDefault(p => p.Id == productId);
         }
 
-        public void InsertProduct(App.Support.Common.Models.Product product)
+        public void InsertProduct(App.Support.Common.Models.CatalogService.Product product)
         {
             throw new System.NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace Service.API.Catalog.Repositories.Product
             throw new System.NotImplementedException();
         }
 
-        public void UpdateProduct(App.Support.Common.Models.Product product)
+        public void UpdateProduct(App.Support.Common.Models.CatalogService.Product product)
         {
             throw new System.NotImplementedException();
         }

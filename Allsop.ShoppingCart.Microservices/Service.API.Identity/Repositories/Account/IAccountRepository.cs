@@ -5,11 +5,11 @@ namespace Service.API.Identity.Repositories.Account
 {
     public interface IAccountRepository: IDisposable
     {
-        IEnumerable<App.Support.Common.Models.Account> GetAccounts();
-        App.Support.Common.Models.Account GetAccountById(int studentId);
-        void InsertAccount(App.Support.Common.Models.Account account);
+        IEnumerable<App.Support.Common.Models.IdentityService.Account> GetAccounts();
+        App.Support.Common.Models.IdentityService.Account GetAccountById(int studentId);
+        void InsertAccount(App.Support.Common.Models.IdentityService.Account account);
         void DeleteAccount(int accountId);
-        void UpdateAccount(App.Support.Common.Models.Account account);
+        void UpdateAccount(App.Support.Common.Models.IdentityService.Account account);
         void Save();
     }
 }

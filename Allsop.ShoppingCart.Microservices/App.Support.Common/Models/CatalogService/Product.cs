@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.Protos.Common;
 
-namespace App.Support.Common.Models
+namespace App.Support.Common.Models.CatalogService
 {
     public class Product
     {

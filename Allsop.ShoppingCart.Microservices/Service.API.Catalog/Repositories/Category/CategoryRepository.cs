@@ -13,17 +13,17 @@ namespace Service.API.Catalog.Repositories.Category
             this._context = context;
         }
         
-        public IEnumerable<App.Support.Common.Models.Category> GetCategories()
+        public IEnumerable<App.Support.Common.Models.CatalogService.Category> GetCategories()
         {
             return _context.Categories.ToList();
         }
 
-        public App.Support.Common.Models.Category GetCategoryById(int categoryId)
+        public App.Support.Common.Models.CatalogService.Category GetCategoryById(int categoryId)
         {
             throw new System.NotImplementedException();
         }
 
-        public void InsertCategory(App.Support.Common.Models.Category category)
+        public void InsertCategory(App.Support.Common.Models.CatalogService.Category category)
         {
             throw new System.NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace Service.API.Catalog.Repositories.Category
             throw new System.NotImplementedException();
         }
 
-        public void UpdateCategory(App.Support.Common.Models.Category category)
+        public void UpdateCategory(App.Support.Common.Models.CatalogService.Category category)
         {
             throw new System.NotImplementedException();
         }

@@ -1,4 +1,5 @@
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 
 namespace Service.API.Identity.ViewModels
 {

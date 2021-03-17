@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

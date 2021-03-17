@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace App.Support.Common.Models
+namespace App.Support.Common.Models.CatalogService
 {
     [Table("Categories")]
     public class Category

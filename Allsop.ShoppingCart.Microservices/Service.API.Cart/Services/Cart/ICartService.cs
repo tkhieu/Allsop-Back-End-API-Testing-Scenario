@@ -6,7 +6,7 @@ namespace Service.API.Cart.Services.Cart
 {
     public interface ICartService
     {
-        App.Support.Common.Models.Cart GenerateAnEmptyCart(Guid accountId);
-        CartViewModel GenerateCartViewModel(App.Support.Common.Models.Cart cart);
+        App.Support.Common.Models.CartService.Cart GenerateAnEmptyCart(Guid accountId);
+        CartViewModel GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart);
     }
 }

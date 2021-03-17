@@ -1,3 +1,4 @@
+using App.Support.Common.Models.CartService;
 using Microsoft.EntityFrameworkCore;
 
 namespace Service.API.Cart.Infrastructure
@@ -9,7 +10,7 @@ namespace Service.API.Cart.Infrastructure
         {
         }
 
-        public DbSet<App.Support.Common.Models.Cart> Carts { get; set; }
-        public DbSet<App.Support.Common.Models.CartItem> CartItems { get; set; }
+        public DbSet<App.Support.Common.Models.CartService.Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }

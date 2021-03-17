@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
+using App.Support.Common.Models.CartService;
+using App.Support.Common.Models.CatalogService;
 using App.Support.Common.Protos.Catalog;
 using Service.API.Cart.ViewModels.Cart;
 
@@ -17,9 +19,9 @@ namespace Service.API.Cart.Services.Cart
             this._grpcClientFactory = grpcClientFactory;
         }
         
-        public App.Support.Common.Models.Cart GenerateAnEmptyCart(Guid accountId)
+        public App.Support.Common.Models.CartService.Cart GenerateAnEmptyCart(Guid accountId)
         {
-            var cart = new App.Support.Common.Models.Cart()
+            var cart = new App.Support.Common.Models.CartService.Cart()
             {
                 AccountId = accountId,
                 CreatedAt = DateTime.Now,
@@ -30,7 +32,7 @@ namespace Service.API.Cart.Services.Cart
             return cart;
         }
 
-        public CartViewModel GenerateCartViewModel(App.Support.Common.Models.Cart cart)
+        public CartViewModel GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
             var cartViewModel = new CartViewModel(cart);
 

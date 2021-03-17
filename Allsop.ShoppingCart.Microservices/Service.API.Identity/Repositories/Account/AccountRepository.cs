@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

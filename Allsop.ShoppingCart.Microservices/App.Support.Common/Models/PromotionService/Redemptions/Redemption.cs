@@ -1,4 +1,5 @@
 using System;
+using App.Support.Common.Models.IdentityService;
 using App.Support.Common.Models.PromotionService.DiscountCampaigns;
 using App.Support.Common.Models.PromotionService.DiscountCodes;
 

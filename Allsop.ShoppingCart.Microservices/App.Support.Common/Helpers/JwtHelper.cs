@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 using Microsoft.IdentityModel.Tokens;
 using Service.API.Identity.Infrastructure;
 

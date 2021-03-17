@@ -1,5 +1,6 @@
 using System;
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

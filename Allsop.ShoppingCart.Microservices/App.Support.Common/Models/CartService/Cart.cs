@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace App.Support.Common.Models
+namespace App.Support.Common.Models.CartService
 {
     [Table("Carts")]
     public class Cart

@@ -1,4 +1,5 @@
 using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

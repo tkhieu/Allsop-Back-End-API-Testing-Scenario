@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using App.Support.Common.Configurations;
 using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
+using App.Support.Common.Models.CartService;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;

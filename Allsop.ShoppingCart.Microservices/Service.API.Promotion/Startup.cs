@@ -11,9 +11,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Promotion.Infrastructure;
 using Service.API.Promotion.Repositories.DiscountCampaign;
+using Service.API.Promotion.Repositories.DiscountCode;
 using Service.API.Promotion.Services.DiscountCampaign;
 using Service.API.Promotion.Services.DiscountCode;
 using Service.API.Promotion.Services.DiscountValidation;
+using Service.API.Promotion.Services.gRPC;
 
 namespace Service.API.Promotion
 {
@@ -69,6 +71,10 @@ namespace Service.API.Promotion
             services.AddScoped<DiscountValidationService>();
             
             services.AddScoped<DiscountCodeService>();
+            services.AddScoped<DiscountCodeRepository>();
+            
+            // gRPC
+            services.AddGrpc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +95,11 @@ namespace Service.API.Promotion
             
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGrpcService<PromotionGrpcService>().RequireHost("*:6004");
+            });
         }
     }
 }

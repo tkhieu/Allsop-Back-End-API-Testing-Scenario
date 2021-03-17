@@ -20,11 +20,39 @@
     </ItemGroup>
     <!--gRPC-->
     <ItemGroup>
-        <Protobuf Include="Protos\common.proto" Link="Protos\common.proto" GrpcServices="Both" ProtoRoot="Protos\" />
-        <Protobuf Include="Protos\catalog.proto" Link="Protos\catalog.proto" GrpcServices="Both" ProtoRoot="Protos\" />
+        <Protobuf Include="Protos\common.proto">
+            <GrpcServices>Both</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot>Protos/</ProtoRoot>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj/Debug/net5.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\common.proto</Link>
+        </Protobuf>
+        <Protobuf Include="Protos\catalog.proto">
+            <GrpcServices>Both</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot>Protos/</ProtoRoot>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj/Debug/net5.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\catalog.proto</Link>
+        </Protobuf>
+        <Protobuf Include="Protos\promotion.proto">
+            <GrpcServices>Both</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot>Protos/</ProtoRoot>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj/Debug/net5.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\promotion.proto</Link>
+        </Protobuf>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Models\PromotionService" />
+        <Folder Include="Models\PromotionService" />
     </ItemGroup>
 
 </Project>

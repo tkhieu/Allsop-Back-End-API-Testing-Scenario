@@ -29,7 +29,6 @@ namespace Service.API.Catalog.Services.gRPC
                     Product = null
                 });
             
-            
             var productDto = product.GenerateGrpcProduct();
             return Task.FromResult(new ReturnSingleProduct()
             {

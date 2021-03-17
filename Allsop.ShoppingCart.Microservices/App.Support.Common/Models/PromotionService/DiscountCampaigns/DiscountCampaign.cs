@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using App.Support.Common.Models.PromotionService.DiscountCodes;
 using App.Support.Common.Models.PromotionService.DiscountValidations;
 using App.Support.Common.Models.PromotionService.Redemptions;
+using App.Support.Common.Protos.Common;
+using App.Support.Common.Protos.Promotion;
+using Google.Protobuf.Collections;
 
 namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
 {
@@ -25,5 +28,36 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
         public virtual ICollection<DiscountCode> DiscountCodes { get; set; }
         public virtual ICollection<Redemption> Redemptions { get; set; }
         public virtual ICollection<DiscountValidation> DiscountValidations { get; set; }
+        
+        public DiscountCampaignDTO GenerateGrpcDtoFromProduct()
+        {
+            var discountCampaignDto = new DiscountCampaignDTO
+            {
+                Id = this.Id.ToString(), Name = this.Name, CodePrefix = this.CodePrefix
+            };
+            
+            var discountValue = this.DiscountValue;
+            if (discountValue != null)
+                discountCampaignDto.DiscountValue = DecimalValue.FromDecimal(discountValue.Value);
+            discountCampaignDto.StartDate = this.StartDate.ToString();
+            discountCampaignDto.ExpirationDate = this.ExpirationDate.ToString();
+            discountCampaignDto.ApplyOnId = this.ApplyOnId.ToString();
+            discountCampaignDto.DiscountCampaignType = (uint) this.DiscountCampaignType.GetHashCode();
+            discountCampaignDto.DiscountUnitId = this.DiscountUnitId.ToString();
+            discountCampaignDto.DiscountCampaignApplyOn = (uint) this.DiscountCampaignApplyOn.GetHashCode();
+            
+            foreach (var discountValidation in this.DiscountValidations)
+            {
+                var discountValidationDto = discountValidation.GenerateGrpcDtoFromProductValidation();
+                discountCampaignDto.DiscountValidations.Add(discountValidationDto);
+            }
+
+            return discountCampaignDto;
+        }
+        
+        public static DiscountCampaign GenerateDiscountCampaignFromGrpcDto(DiscountCampaignDTO productDto)
+        {
+            return new DiscountCampaign();
+        }
     }
 }

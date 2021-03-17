@@ -130,6 +130,35 @@ namespace Service.API.Cart.Controllers
             };
 
         }
+        
+        [HttpPost]
+        [Route("Me/DiscountCode")]
+        [Authorize]
+        public async Task<ResultViewModel> AddDiscountCodeToCart([FromBody] AddDiscountCodeViewModel model)
+        {
+            var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
+
+            if (accountId == null)
+                return new ResultViewModel
+                {
+                    Data = null,
+                    Message = "Error: You must login before add Cart Item into Cart",
+                    Status = Status.Error
+                };
+
+            var cart =  _cartRepository.GetCartByAccountId(accountId) ??
+                       _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
+
+            var cartViewModel = _cartService.GenerateCartViewModel(cart);
+            
+            return new ResultViewModel
+            {
+                Data = cartViewModel,
+                Message = "Success",
+                Status = Status.Success
+            };
+
+        }
 
         [HttpPut]
         [Route("Me")]

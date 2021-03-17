@@ -1,4 +1,6 @@
+using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Service.API.Promotion.Infrastructure;
 
 namespace Service.API.Promotion.Repositories.DiscountCampaign
@@ -18,6 +20,13 @@ namespace Service.API.Promotion.Repositories.DiscountCampaign
             this._promotionDbContext.DiscountCampaigns.Add(discountCampaign);
             await this._promotionDbContext.SaveChangesAsync();
             return discountCampaign;
+        }
+
+        public async Task<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign> GetById(Guid discountCampaignId)
+        {
+            return await this._promotionDbContext.DiscountCampaigns.Include("DiscountValidations")
+                .FirstOrDefaultAsync(d => d.Id == discountCampaignId);
+            
         }
     }
 }

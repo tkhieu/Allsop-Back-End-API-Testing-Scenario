@@ -71,19 +71,24 @@ namespace Service.API.Cart.Services.Cart
 
         public async Task<bool> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode)
         {
-            //TODO: Convert to discount code validation
             var promotionGrpcClient = _grpcClientFactory.CreatePromotionGrpcClient();
-            var rq = new GetDiscountCampaignDetailRequest()
+            var rq = new ValidateDiscountCodeWithCartRequest()
             {
-                DiscountCode = discountCode
+                DiscountCode = discountCode,
+                Cart = cart.GenerateCartDto()
             };
-            var response = await promotionGrpcClient.GetDiscountDetailAsync(rq);
+            var response = await promotionGrpcClient.ValidateDiscountCodeAsync(rq);
 
             if (response.Status != GrpcStatus.Success) return false;
+
+            if (!response.ValidateDiscountCode.IsValid) return false;
             
             cart.DiscountCode = discountCode;
             await _cartRepository.InsertOrUpdateCart(cart);
+
             return true;
+
+
         }
     }
 }

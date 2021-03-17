@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "common.proto";
+import "cart.proto";
 
 option csharp_namespace = "App.Support.Common.Protos.Promotion";
 
@@ -8,8 +9,9 @@ package promotion;
 
 service PromotionGrpc {
   rpc GetDiscountDetail (GetDiscountCampaignDetailRequest) returns (ReturnSingleDiscountCampaign);
+  rpc ValidateDiscountCode (ValidateDiscountCodeWithCartRequest) returns (ReturnValidateDiscountCode);
 }
-
+//
 message GetDiscountCampaignDetailRequest {
   string DiscountCode = 1;
 }
@@ -17,6 +19,22 @@ message GetDiscountCampaignDetailRequest {
 message ReturnSingleDiscountCampaign {
   common.GrpcStatus status = 1;
   DiscountCampaignDTO discountCampaign = 2;
+}
+
+//
+message ValidateDiscountCodeWithCartRequest {
+  string DiscountCode = 1;
+  cart.CartDTO Cart = 2;
+}
+
+message ReturnValidateDiscountCode {
+  common.GrpcStatus status = 1;
+  ValidateDiscountCodeDTO ValidateDiscountCode= 2;
+}
+
+message ValidateDiscountCodeDTO {
+  bool IsValid = 1;
+  string Message = 2;
 }
 
 message DiscountValidationDTO {

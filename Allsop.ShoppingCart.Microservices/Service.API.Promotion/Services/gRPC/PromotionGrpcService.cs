@@ -43,5 +43,30 @@ namespace Service.API.Promotion.Services.gRPC
 
             return returnSingleDiscountCampaign;
         }
+
+        public override async Task<ReturnValidateDiscountCode> ValidateDiscountCode(ValidateDiscountCodeWithCartRequest request, ServerCallContext context)
+        {
+            string discountCode = request.DiscountCode;
+            
+            var discountCodeObj = await _discountCodeRepository.GetDiscountCodeByCode(discountCode);
+            
+            var discountCampaignId = discountCodeObj.DiscountCampaignId;
+
+            var discountCampaignObj = await _discountCampaignRepository.GetById(discountCampaignId);
+
+            var cartDto = request.Cart;
+
+            ReturnValidateDiscountCode returnValidateDiscountCode = new ReturnValidateDiscountCode()
+            {
+                Status = GrpcStatus.Success,
+                ValidateDiscountCode = new ValidateDiscountCodeDTO()
+                {
+                    IsValid = true,
+                    Message = "Passed"
+                }
+            };
+
+            return returnValidateDiscountCode;
+        }
     }
 }

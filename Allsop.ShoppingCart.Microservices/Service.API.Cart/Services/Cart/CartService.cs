@@ -62,32 +62,59 @@ namespace Service.API.Cart.Services.Cart
                 Cart = cart.GenerateCartDto()
             };
             var response = await promotionGrpcClient.ValidateDiscountCodeAsync(rq);
-
             return response.Status == GrpcStatus.Success && response.ValidateDiscountCode.IsValid;
         }
+
+        public async Task<DiscountCampaignDTO> GetDiscountCampaignDetail(string discountCode)
+        {
+            var promotionGrpcClient = _grpcClientFactory.CreatePromotionGrpcClient();
+            var discountCampaignDetailRequest = new GetDiscountCampaignDetailRequest()
+            {
+                DiscountCode = discountCode
+            };
+            var returnSingleDiscountCampaignResponse = await promotionGrpcClient.GetDiscountDetailAsync(discountCampaignDetailRequest);
+
+            return returnSingleDiscountCampaignResponse.DiscountCampaign;
+
+        }
+        
+        
 
         public async Task<CartViewModel> GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
             var cartViewModel = new CartViewModel(cart);
+
+            var subTotalAmount = 0m;
+            var discountAmount = 0m;
+            var totalAmount = 0m;
             
             foreach (var cartItemViewModel in cartViewModel.CartItems)
             {
                 var productId = cartItemViewModel.ProductId;
                 var product = await GetProductFromProductId(productId);
                 cartItemViewModel.Product = product;
+                
+                cartItemViewModel.ItemSubTotalAmount = product.PriceValue * cartItemViewModel.Quantity;
+                subTotalAmount += cartItemViewModel.ItemSubTotalAmount;
+                
+                cartItemViewModel.ItemDiscountAmount = 0m;
+                discountAmount += cartItemViewModel.ItemDiscountAmount;
+                
+                cartItemViewModel.ItemTotalAmount =
+                    cartItemViewModel.ItemSubTotalAmount - cartItemViewModel.ItemDiscountAmount;
+                totalAmount += cartItemViewModel.ItemTotalAmount;
             }
-            
-            var promotionGrpcClient = _grpcClientFactory.CreatePromotionGrpcClient();
-            var discountCampaignDetailRequest = new GetDiscountCampaignDetailRequest()
-            {
-                DiscountCode = cart.DiscountCode
-            };
-            var returnSingleDiscountCampaignResponse = await promotionGrpcClient.GetDiscountDetailAsync(discountCampaignDetailRequest);
-            
-            cartViewModel.DiscountCampaignDto = returnSingleDiscountCampaignResponse.DiscountCampaign;
 
-            return cartViewModel;
+            cartViewModel.SubTotalAmount = subTotalAmount;
+            cartViewModel.DiscountAmount = discountAmount;
+            cartViewModel.TotalAmount = totalAmount;
+
+            if (cart.DiscountCode == null) return cartViewModel;
             
+            var discountCampaignDto = await GetDiscountCampaignDetail(cart.DiscountCode);
+            cartViewModel.DiscountCampaignDto = discountCampaignDto;
+            
+            return cartViewModel;
             
         }
 

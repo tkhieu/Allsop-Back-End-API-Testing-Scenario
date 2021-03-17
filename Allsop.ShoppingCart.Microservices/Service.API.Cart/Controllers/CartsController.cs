@@ -147,7 +147,7 @@ namespace Service.API.Cart.Controllers
             var cart =  _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            // await _cartService.AddDiscountCodeToCart(cart, model.DiscountCode);
+            await _cartService.AddDiscountCodeToCart(cart, model.DiscountCode);
             var cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel
@@ -211,12 +211,12 @@ namespace Service.API.Cart.Controllers
                         cartItem.Quantity += model.Quantity;
                         if (cartItem.Quantity == 0)
                         {
-                            _cartItemRepository.DeleteCartItem(cartItem);
+                            await _cartItemRepository.DeleteCartItem(cartItem);
                         }
                         else
                         {
-                            await _cartRepository.InsertOrUpdateCart(cart);
                             await _cartItemRepository.UpdateCartItem(cartItem);
+                            await _cartRepository.InsertOrUpdateCart(cart);
                         }
                     }
                 }
@@ -267,7 +267,8 @@ namespace Service.API.Cart.Controllers
 
             await _cartItemRepository.DeleteCartItem(cartItem);
 
-            var cartViewModel = _cartService.GenerateCartViewModel(cart);
+            cart = _cartRepository.GetCartByAccountId(accountId);
+            var cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel
             {

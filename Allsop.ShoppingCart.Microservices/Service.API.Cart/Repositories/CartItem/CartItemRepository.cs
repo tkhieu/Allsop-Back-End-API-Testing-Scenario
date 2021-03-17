@@ -35,8 +35,13 @@ namespace Service.API.Cart.Repositories.CartItem
 
         public async Task<bool> DeleteCartItem(App.Support.Common.Models.CartService.CartItem cartItem)
         {
-            _context.CartItems.Remove(cartItem);
+            var ci = await _context.CartItems.FirstOrDefaultAsync(i => i.Id == cartItem.Id);
+
+            if (ci == null) return false;
+            
+            _context.CartItems.Remove(ci);
             await _context.SaveChangesAsync();
+            
             return true;
         }
     }

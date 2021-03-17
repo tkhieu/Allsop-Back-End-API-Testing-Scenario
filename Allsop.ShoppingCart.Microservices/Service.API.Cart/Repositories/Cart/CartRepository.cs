@@ -12,12 +12,12 @@ namespace Service.API.Cart.Repositories.Cart
 
         public CartRepository(CartDbContext context)
         {
-            this._context = context;
+            _context = context;
         }
         
         public App.Support.Common.Models.CartService.Cart GetCartByAccountId(string accountId)
         {
-            return this._context.Carts.Include("CartItems").FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
+            return _context.Carts.Include("CartItems").FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
         }
         
         public void RemoveEmptyCart(App.Support.Common.Models.CartService.Cart cart)
@@ -39,12 +39,12 @@ namespace Service.API.Cart.Repositories.Cart
         
         public async Task<App.Support.Common.Models.CartService.Cart> InsertOrUpdateCart(App.Support.Common.Models.CartService.Cart cart)
         {
-            var tempCart = _context.Carts.FirstOrDefault(c => c.Id == cart.Id);
+            var tempCart = await _context.Carts.FirstOrDefaultAsync(c => c.Id == cart.Id);
             if (tempCart == null)
             {
-                await this._context.Carts.AddAsync(cart);
+                await _context.Carts.AddAsync(cart);
             }
-            await this._context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return cart;
         }
     }

@@ -15,7 +15,6 @@ namespace App.Support.Common.Models.PromotionService.Redemptions
         public Guid DiscountCampaignId { get; set; }
         public virtual DiscountCampaign DiscountCampaign { get; set; }
         public string AccountId { get; set; }
-        public virtual Account Account { get; set; }
         public Guid OrderId { get; set; }
     }
 }

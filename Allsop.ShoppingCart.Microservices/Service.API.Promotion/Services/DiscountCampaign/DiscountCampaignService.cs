@@ -1,25 +1,46 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Service.API.Promotion.Services.DiscountValidation;
 using Service.API.Promotion.ViewModels;
 
 namespace Service.API.Promotion.Services.DiscountCampaign
 {
     public class DiscountCampaignService: IDiscountCampaignService
     {
-        public App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign generateDiscountCampaignFromViewModel(DiscountCampaignRequestViewModel viewModel)
+        private IDiscountValidationService _discountValidationService;
+
+        public DiscountCampaignService(DiscountValidationService discountValidationService)
         {
-            App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign discountCampaign =
-                new App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign();
-            
-            discountCampaign.Id = Guid.NewGuid();
-            discountCampaign.Name = viewModel.Name;
-            discountCampaign.DiscountCampaignType = viewModel.DiscountCampaignType;
-            discountCampaign.DiscountValue = viewModel.DiscountValue;
-            discountCampaign.DiscountUnitId = viewModel.DiscountUnitId;
-            discountCampaign.StartDate = viewModel.StartDate;
-            discountCampaign.ExpirationDate = viewModel.ExpirationDate;
-            discountCampaign.DiscountCampaignApplyOn = viewModel.DiscountCampaignApplyOn;
-            discountCampaign.ApplyOnId = viewModel.DiscountCampaignApplyOnId;
-            discountCampaign.CodePrefix = viewModel.CodePrefix;
+            this._discountValidationService = discountValidationService;
+        }
+        
+        public App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign GenerateDiscountCampaignFromViewModel(DiscountCampaignRequestViewModel viewModel)
+        {
+            var discountCampaign =
+                new App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign
+                {
+                    Id = Guid.NewGuid(),
+                    Name = viewModel.Name,
+                    DiscountCampaignType = viewModel.DiscountCampaignType,
+                    DiscountValue = viewModel.DiscountValue,
+                    DiscountUnitId = viewModel.DiscountUnitId,
+                    StartDate = viewModel.StartDate,
+                    ExpirationDate = viewModel.ExpirationDate,
+                    DiscountCampaignApplyOn = viewModel.DiscountCampaignApplyOn,
+                    ApplyOnId = viewModel.DiscountCampaignApplyOnId,
+                    CodePrefix = viewModel.CodePrefix
+                };
+
+            discountCampaign.DiscountValidations =
+                new List<App.Support.Common.Models.PromotionService.DiscountValidations.DiscountValidation>();
+            foreach (var discountValidation in viewModel.DiscountValidations.Select(viewModelDiscountValidation => _discountValidationService.GenerateDiscountValidationFromViewModel(viewModelDiscountValidation)))
+            {
+                discountCampaign.DiscountValidations.Add(discountValidation);
+            }
+
+
+
 
             return discountCampaign;
             

@@ -43,14 +43,14 @@ namespace Service.API.Promotion.Controllers
                 };
             }
 
-            var discountCampaign = _discountCampaignService.generateDiscountCampaignFromViewModel(model);
+            var discountCampaign = _discountCampaignService.GenerateDiscountCampaignFromViewModel(model);
             await _discountCampaignRepository.Insert(discountCampaign);
             
             return new ResultViewModel()
             {
                 Status = Status.Success,
                 Message = "Testing",
-                Data = {}
+                Data = discountCampaign
             };
         }
     }

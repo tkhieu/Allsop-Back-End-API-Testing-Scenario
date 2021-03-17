@@ -9,7 +9,7 @@ namespace App.Support.Common.Models.PromotionService.Redemptions
     {
         public Guid Id { get; set; }
         public DateTimeOffset RedeemTime { get; set; }
-        public Decimal? Amount { get; set; }
+        public decimal? Amount { get; set; }
         public Guid DiscountCodeId { get; set; }
         public virtual DiscountCode DiscountCode { get; set; }
         public Guid DiscountCampaignId { get; set; }

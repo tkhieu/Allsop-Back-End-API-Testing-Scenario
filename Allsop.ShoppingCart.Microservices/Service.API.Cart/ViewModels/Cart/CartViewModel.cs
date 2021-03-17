@@ -41,18 +41,11 @@ namespace Service.API.Cart.ViewModels.Cart
             CartItems = new List<CartItemViewModel>();
 
             DiscountCode = cart.DiscountCode;
-
-            var subTotalAmount = 0m;
             
             foreach (var cartItem in cart.CartItems)
             {
                 CartItems.Add(new CartItemViewModel(cartItem));
-                subTotalAmount += cartItem.Product.PriceValue;
             }
-
-            SubTotalAmount = subTotalAmount;
-
-            TotalAmount = SubTotalAmount - DiscountAmount;
         }
     }
 
@@ -68,11 +61,11 @@ namespace Service.API.Cart.ViewModels.Cart
 
         public DateTime AddedAt { get; set; }
         
-        public Money ItemSubTotalAmount { get; set; }
+        public decimal ItemSubTotalAmount { get; set; }
         
-        public Money ItemDiscountAmount { get; set; }
+        public decimal ItemDiscountAmount { get; set; }
         
-        public Money ItemTotalAmount { get; set; }
+        public decimal ItemTotalAmount { get; set; }
 
         public CartItemViewModel(CartItem cartItem)
         {

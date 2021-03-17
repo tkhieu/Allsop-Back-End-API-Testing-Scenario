@@ -17,7 +17,7 @@ namespace Service.API.Cart.Repositories.CartItem
         
         public ICollection<App.Support.Common.Models.CartService.CartItem> GetCartItemsByCartId(string cartId)
         {
-            return _context.CartItems.Include(i => i.Product).Where(ci => ci.CartId == cartId).ToList();
+            return _context.CartItems.Where(ci => ci.CartId == cartId).ToList();
         }
 
         public async Task<App.Support.Common.Models.CartService.CartItem> InsertCartItem(App.Support.Common.Models.CartService.CartItem cartItem)

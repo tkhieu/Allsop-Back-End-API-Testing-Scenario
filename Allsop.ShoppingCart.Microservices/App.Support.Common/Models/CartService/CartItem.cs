@@ -15,8 +15,6 @@ namespace App.Support.Common.Models.CartService
         
         public Guid ProductId { get; set; }
         
-        public Product Product { get; set; }
-        
         public long Quantity { get; set; }
         
         public DateTime AddedAt { get; set; }

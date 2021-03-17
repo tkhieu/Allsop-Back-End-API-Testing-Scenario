@@ -84,7 +84,7 @@ namespace Service.API.Cart.Controllers
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Product.Id == model.ProductId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId.ToString() == model.ProductId);
 
             CartViewModel cartViewModel;
             if (model.Quantity <= 0)

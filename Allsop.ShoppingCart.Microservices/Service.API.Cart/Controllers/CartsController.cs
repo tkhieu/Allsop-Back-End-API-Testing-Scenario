@@ -3,9 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using App.Support.Common.Configurations;
 using App.Support.Common.gRPC.Clients;
-using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
-using App.Support.Common.Protos.Catalog;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +48,7 @@ namespace Service.API.Cart.Controllers
                     cart = _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
                 }
 
-                var cartViewModel = _cartService.GenerateCartViewModel(cart);
+                var cartViewModel = await _cartService.GenerateCartViewModel(cart);
 
                 return new ResultViewModel
                 {
@@ -91,7 +89,7 @@ namespace Service.API.Cart.Controllers
             CartViewModel cartViewModel;
             if (model.Quantity <= 0)
             {
-                cartViewModel = _cartService.GenerateCartViewModel(cart);
+                cartViewModel = await _cartService.GenerateCartViewModel(cart);
 
                 return new ResultViewModel
                 {
@@ -120,7 +118,7 @@ namespace Service.API.Cart.Controllers
 
             await _cartRepository.InsertOrUpdateCart(cart);
             
-            cartViewModel = _cartService.GenerateCartViewModel(cart);
+            cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel
             {
@@ -149,7 +147,8 @@ namespace Service.API.Cart.Controllers
             var cart =  _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            var cartViewModel = _cartService.GenerateCartViewModel(cart);
+            // await _cartService.AddDiscountCodeToCart(cart, model.DiscountCode);
+            var cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel
             {
@@ -195,7 +194,7 @@ namespace Service.API.Cart.Controllers
             }
             else
             {
-                cartViewModel = _cartService.GenerateCartViewModel(cart);
+                cartViewModel = await _cartService.GenerateCartViewModel(cart);
                 if (cartItem == null && model.Quantity < 0)
                 {
                     return new ResultViewModel
@@ -225,7 +224,7 @@ namespace Service.API.Cart.Controllers
 
             _cartRepository.RemoveEmptyCart(cart);
             
-            cartViewModel = _cartService.GenerateCartViewModel(cart);
+            cartViewModel = await _cartService.GenerateCartViewModel(cart);
             
             return new ResultViewModel
             {
@@ -266,7 +265,7 @@ namespace Service.API.Cart.Controllers
                 };
             }
 
-            _cartItemRepository.DeleteCartItem(cartItem);
+            await _cartItemRepository.DeleteCartItem(cartItem);
 
             var cartViewModel = _cartService.GenerateCartViewModel(cart);
             

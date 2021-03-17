@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace Service.API.Cart.Repositories.CartItem
 
         public CartItemRepository(CartDbContext context)
         {
-            this._context = context;
+            _context = context;
         }
         
         public ICollection<App.Support.Common.Models.CartService.CartItem> GetCartItemsByCartId(string cartId)
@@ -22,21 +21,22 @@ namespace Service.API.Cart.Repositories.CartItem
 
         public async Task<App.Support.Common.Models.CartService.CartItem> InsertCartItem(App.Support.Common.Models.CartService.CartItem cartItem)
         {
-            await this._context.CartItems.AddAsync(cartItem);
-            await this._context.SaveChangesAsync();
+            await _context.CartItems.AddAsync(cartItem);
+            await _context.SaveChangesAsync();
             return cartItem;
         }
 
         public async Task<App.Support.Common.Models.CartService.CartItem> UpdateCartItem(App.Support.Common.Models.CartService.CartItem cartItem)
         {
-            await this._context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return cartItem;
         }
 
-        public async void DeleteCartItem(App.Support.Common.Models.CartService.CartItem cartItem)
+        public async Task<bool> DeleteCartItem(App.Support.Common.Models.CartService.CartItem cartItem)
         {
-            this._context.CartItems.Remove(cartItem);
-            await this._context.SaveChangesAsync();
+            _context.CartItems.Remove(cartItem);
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

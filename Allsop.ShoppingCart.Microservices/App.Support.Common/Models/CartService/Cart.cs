@@ -17,5 +17,7 @@ namespace App.Support.Common.Models.CartService
         public DateTime CreatedAt { get; init; }
 
         public ICollection<CartItem> CartItems { get; set; }
+        
+        public string DiscountCode { get; set; }
     }
 }

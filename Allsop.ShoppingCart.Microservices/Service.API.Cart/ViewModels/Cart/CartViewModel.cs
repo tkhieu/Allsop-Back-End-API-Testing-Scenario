@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
 using App.Support.Common.Models.CatalogService;
+using App.Support.Common.Protos.Promotion;
 
 namespace Service.API.Cart.ViewModels.Cart
 {
@@ -15,6 +16,10 @@ namespace Service.API.Cart.ViewModels.Cart
         public DateTime CreatedAt { get; set; }
 
         public ICollection<CartItemViewModel> CartItems { get; set; }
+        
+        public string DiscountCode { get; set; }
+        
+        public DiscountCampaignDTO DiscountCampaignDto { get; set; }
 
         public CartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
@@ -26,6 +31,8 @@ namespace Service.API.Cart.ViewModels.Cart
             this.CreatedAt = cart.CreatedAt;
 
             this.CartItems = new List<CartItemViewModel>();
+
+            this.DiscountCode = cart.DiscountCode;
             
             foreach (var cartItem in cart.CartItems)
             {

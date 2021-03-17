@@ -4,6 +4,8 @@ using App.Support.Common.Models.PromotionService.DiscountCampaigns;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Service.API.Promotion.Repositories.DiscountCampaign;
+using Service.API.Promotion.Services.DiscountCampaign;
 using Service.API.Promotion.ViewModels;
 
 namespace Service.API.Promotion.Controllers
@@ -11,6 +13,14 @@ namespace Service.API.Promotion.Controllers
     [Route("api/[controller]")]
     public class DiscountCampaignsController : Controller
     {
+        private IDiscountCampaignService _discountCampaignService;
+        private IDiscountCampaignRepository _discountCampaignRepository;
+
+        public DiscountCampaignsController(DiscountCampaignService discountCampaignService, DiscountCampaignRepository discountCampaignRepository)
+        {
+            this._discountCampaignService = discountCampaignService;
+            this._discountCampaignRepository = discountCampaignRepository;
+        }
         
         [HttpGet]
         [Authorize]
@@ -33,87 +43,8 @@ namespace Service.API.Promotion.Controllers
                 };
             }
 
-            DiscountCampaign discountCampaign = new DiscountCampaign();
-
-            switch (model.CodeType)
-            {
-                case CodeType.SingleCode:
-                {
-                    var code = model.SingleCode;
-                    
-                
-                    Console.WriteLine(model.CodeType);
-                    Console.WriteLine(code);
-                    break;
-                }
-                case CodeType.BulkCodes:
-                {
-                    var codeAmount = model.CodesAmount;
-                
-                    Console.WriteLine(model.CodeType);
-                    Console.WriteLine(codeAmount);
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            switch (model.DiscountCampaignType)
-            {
-                case DiscountCampaignType.Money:
-                {
-                    if (model.DiscountValue != null)
-                    {
-                        var discountValue = model.DiscountValue.Value;
-                        Console.WriteLine(model.DiscountCampaignType);
-                        Console.WriteLine(discountValue);
-                    }
-                    break;
-                }
-
-                case DiscountCampaignType.Percentage:
-                {
-                    if (model.DiscountValue != null)
-                    {
-                        var discountValue = model.DiscountValue.Value;
-                        Console.WriteLine(model.DiscountCampaignType);
-                        Console.WriteLine(discountValue);
-                    }
-
-                    break;
-                }
-
-                case DiscountCampaignType.Product:
-                {
-                    if (model.DiscountUnitId != null)
-                    {
-                        var discountUnitId = model.DiscountUnitId;
-                        Console.WriteLine(model.DiscountCampaignType);
-                        Console.WriteLine(discountUnitId);
-                    }
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            switch (model.DiscountCampaignApplyOn)
-            {
-                case DiscountCampaignApplyOn.Bill:
-                {
-                    break;
-                }
-                case DiscountCampaignApplyOn.Product:
-                {
-                    break;
-                }
-                case DiscountCampaignApplyOn.ProductCategory:
-                {
-                    break;
-                }
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var discountCampaign = _discountCampaignService.generateDiscountCampaignFromViewModel(model);
+            await _discountCampaignRepository.Insert(discountCampaign);
             
             return new ResultViewModel()
             {

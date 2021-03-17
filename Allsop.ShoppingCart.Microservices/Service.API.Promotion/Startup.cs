@@ -10,6 +10,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.API.Promotion.Infrastructure;
+using Service.API.Promotion.Repositories.DiscountCampaign;
+using Service.API.Promotion.Services.DiscountCampaign;
 
 namespace Service.API.Promotion
 {
@@ -58,6 +60,9 @@ namespace Service.API.Promotion
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "Service.API.Promotion", Version = "v1"});
             });
+
+            services.AddScoped<DiscountCampaignService>();
+            services.AddScoped<DiscountCampaignRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

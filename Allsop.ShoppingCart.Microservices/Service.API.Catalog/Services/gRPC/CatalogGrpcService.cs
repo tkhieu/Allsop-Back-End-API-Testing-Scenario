@@ -20,7 +20,7 @@ namespace Service.API.Catalog.Services.gRPC
 
         public override Task<ReturnSingleProduct> GetProduct(GetSingleProductRequest request, ServerCallContext context)
         {
-            var product = _productRepository.GetProductById(request.Id);
+            var product = _productRepository.GetProductById(request.ProductId);
 
             if (product == null)
                 return Task.FromResult(new ReturnSingleProduct()

@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
 
-namespace App.Support.Common.ViewModels
+namespace Service.API.Cart.ViewModels.Cart
 {
     public class CartViewModel
     {
@@ -15,7 +14,7 @@ namespace App.Support.Common.ViewModels
 
         public ICollection<CartItemViewModel> CartItems { get; set; }
 
-        public CartViewModel(Cart cart)
+        public CartViewModel(App.Support.Common.Models.Cart cart)
         {
 
             this.Id = Guid.Parse(cart.Id);

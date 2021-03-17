@@ -33,7 +33,6 @@ namespace Service.API.Cart.Controllers
         }
 
         // GET
-
         [HttpGet]
         [Route("Me")]
         [Authorize]
@@ -50,9 +49,11 @@ namespace Service.API.Cart.Controllers
                     cart = _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
                 }
 
+                var cartViewModel = _cartService.GenerateCartViewModel(cart);
+
                 return new ResultViewModel
                 {
-                    Data = new CartViewModel(cart),
+                    Data = cartViewModel,
                     Message = "Success",
                     Status = Status.Success
                 };
@@ -86,13 +87,19 @@ namespace Service.API.Cart.Controllers
 
             var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
 
+            CartViewModel cartViewModel;
             if (model.Quantity <= 0)
+            {
+                cartViewModel = _cartService.GenerateCartViewModel(cart);
+
                 return new ResultViewModel
                 {
-                    Data = new CartViewModel(cart),
+                    Data = cartViewModel,
                     Message = "Error: You can not insert a Cart Item with negative quantity",
                     Status = Status.Error
                 };
+            }
+            
             if (cartItem == null)
             {
                 cartItem = new CartItem
@@ -110,10 +117,13 @@ namespace Service.API.Cart.Controllers
                 await _cartItemRepository.UpdateCartItem(cartItem);
             }
 
-            await _cartRepository.InsertCart(cart);
+            await _cartRepository.InsertOrUpdateCart(cart);
+            
+            cartViewModel = _cartService.GenerateCartViewModel(cart);
+            
             return new ResultViewModel
             {
-                Data = new CartViewModel(cart),
+                Data = cartViewModel,
                 Message = "Success",
                 Status = Status.Success
             };
@@ -140,6 +150,7 @@ namespace Service.API.Cart.Controllers
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
             var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
 
+            CartViewModel cartViewModel;
             if (cartItem == null && model.Quantity > 0)
             {
                 cartItem = new CartItem
@@ -149,39 +160,46 @@ namespace Service.API.Cart.Controllers
                     AddedAt = DateTime.Now,
                     CartId = cart.Id
                 };
-                await _cartRepository.UpdateCart(cart);
+                await _cartRepository.InsertOrUpdateCart(cart);
                 await _cartItemRepository.InsertCartItem(cartItem);
-            }
-            else if (cartItem == null && model.Quantity < 0)
-            {
-                return new ResultViewModel
-                {
-                    Data = new CartViewModel(cart),
-                    Message = "Error: You can not decrease a Cart Item quantity to negative",
-                    Status = Status.Success
-                };
             }
             else
             {
-                if (cartItem != null)
+                cartViewModel = _cartService.GenerateCartViewModel(cart);
+                if (cartItem == null && model.Quantity < 0)
                 {
-                    cartItem.Quantity += model.Quantity;
-                    if (cartItem.Quantity == 0)
+                    return new ResultViewModel
                     {
-                        _cartItemRepository.DeleteCartItem(cartItem);
-                    }
-                    else
+                        Data = cartViewModel,
+                        Message = "Error: You can not decrease a Cart Item quantity to negative",
+                        Status = Status.Success
+                    };
+                }
+                else
+                {
+                    if (cartItem != null)
                     {
-                        await _cartRepository.UpdateCart(cart);
-                        await _cartItemRepository.UpdateCartItem(cartItem);
+                        cartItem.Quantity += model.Quantity;
+                        if (cartItem.Quantity == 0)
+                        {
+                            _cartItemRepository.DeleteCartItem(cartItem);
+                        }
+                        else
+                        {
+                            await _cartRepository.InsertOrUpdateCart(cart);
+                            await _cartItemRepository.UpdateCartItem(cartItem);
+                        }
                     }
                 }
             }
-            
+
             _cartRepository.RemoveEmptyCart(cart);
+            
+            cartViewModel = _cartService.GenerateCartViewModel(cart);
+            
             return new ResultViewModel
             {
-                Data = new CartViewModel(cart),
+                Data = cartViewModel,
                 Message = "Success",
                 Status = Status.Success
             };
@@ -220,9 +238,11 @@ namespace Service.API.Cart.Controllers
 
             _cartItemRepository.DeleteCartItem(cartItem);
 
+            var cartViewModel = _cartService.GenerateCartViewModel(cart);
+            
             return new ResultViewModel
             {
-                Data = new CartViewModel(cart),
+                Data = cartViewModel,
                 Message = "Success",
                 Status = Status.Success
             };

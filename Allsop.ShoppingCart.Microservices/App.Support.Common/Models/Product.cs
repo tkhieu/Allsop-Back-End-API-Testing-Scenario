@@ -1,11 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Numerics;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.Protos.Common;
-using Google.Protobuf.WellKnownTypes;
-using NodaMoney;
 
 namespace App.Support.Common.Models
 {
@@ -13,13 +10,13 @@ namespace App.Support.Common.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public string Id { get; init; }
+        public string Id { get; set; }
         
-        public string Name { get; init; }
+        public string Name { get; set; }
         
-        public string Packaging { get; init; }
+        public string Packaging { get; set; }
         
-        public string Sku { get; init; }
+        public string Sku { get; set; }
         
         public Category Category { get; set; }
         
@@ -31,36 +28,66 @@ namespace App.Support.Common.Models
         
         public int InventoryQuantity { get; set; }
 
-        public Protos.Catalog.ProductDTO GenerateGrpcProduct()
+        public ProductDTO GenerateGrpcProduct()
         {
-            var category = this.Category;
+            var category = Category;
 
-            var c = new CategoryDTO()
+            var c = new CategoryDTO
             {
                 Id = category.Id,
                 Code = category.Code,
                 Name = category.Name
             };
             
-            var p = new ProductDTO()
+            var p = new ProductDTO
             {
-                Id = this.Id,
-                Name = this.Name,
-                InventoryQuantity = this.InventoryQuantity,
-                Packaging = this.Packaging,
-                PriceUnit = this.PriceUnit,
-                PriceValue = DecimalValue.FromDecimal(this.PriceValue),
+                Id = Id,
+                Name = Name,
+                InventoryQuantity = InventoryQuantity,
+                Packaging = Packaging,
+                PriceUnit = PriceUnit,
+                PriceValue = DecimalValue.FromDecimal(PriceValue),
                 
-                Sku = this.Sku,
+                Sku = Sku,
                 Category = c
             };
 
-            if (this.OldPriceValue.HasValue)
+            if (OldPriceValue.HasValue)
             {
-                p.OldPriceValue = DecimalValue.FromDecimal(this.OldPriceValue.Value);
+                p.OldPriceValue = DecimalValue.FromDecimal(OldPriceValue.Value);
             }
 
             return p;
+        }
+        
+        public static Product GenerateProductFromGrpcDto(ProductDTO productDto)
+        {
+            var product = new Product
+            {
+                Id = productDto.Id,
+                Name = productDto.Name,
+                Packaging = productDto.Packaging,
+                Sku = productDto.Sku,
+                InventoryQuantity = productDto.InventoryQuantity,
+                PriceUnit = productDto.PriceUnit,
+                PriceValue = productDto.PriceValue.ToDecimal(),
+            };
+
+            var category = new Category()
+            {
+                Id = productDto.Category.Id,
+                Code = productDto.Category.Code,
+                Name = productDto.Category.Name
+            };
+
+            product.Category = category;
+            
+            if (productDto.OldPriceValue != null)
+            {
+                product.OldPriceValue = productDto.OldPriceValue.ToDecimal();
+            }
+
+            return product;
         }
     }
 }

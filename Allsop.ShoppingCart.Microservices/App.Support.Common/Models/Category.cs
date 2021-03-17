@@ -8,12 +8,12 @@ namespace App.Support.Common.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public string Id { get; init; }
+        public string Id { get; set; }
         
         [Column(name: "Name")]
-        public string Name { get; init; }
+        public string Name { get; set; }
         
         [Column(name: "Code")]
-        public string Code { get; init; }
+        public string Code { get; set; }
     }
 }

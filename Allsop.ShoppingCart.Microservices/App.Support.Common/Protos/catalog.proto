@@ -13,7 +13,7 @@ service CatalogGrpc {
 }
 
 message GetSingleProductRequest {
-  string Id = 1;
+  string ProductId = 1;
 }
 
 message CategoryDTO {

@@ -19,14 +19,7 @@ namespace Service.API.Cart.Repositories.Cart
         {
             return this._context.Carts.Include("CartItems").FirstOrDefault(c => c.AccountId == Guid.Parse(accountId));
         }
-
-        public async Task<App.Support.Common.Models.Cart> InsertCart(App.Support.Common.Models.Cart cart)
-        {
-            await this._context.Carts.AddAsync(cart);
-            await this._context.SaveChangesAsync();
-            return cart;
-        }
-
+        
         public void RemoveEmptyCart(App.Support.Common.Models.Cart cart)
         {
             if(IsEmptyCart(cart)) DeleteCart(cart);
@@ -44,7 +37,7 @@ namespace Service.API.Cart.Repositories.Cart
             await _context.SaveChangesAsync();
         }
         
-        public async Task<App.Support.Common.Models.Cart> UpdateCart(App.Support.Common.Models.Cart cart)
+        public async Task<App.Support.Common.Models.Cart> InsertOrUpdateCart(App.Support.Common.Models.Cart cart)
         {
             var tempCart = _context.Carts.FirstOrDefault(c => c.Id == cart.Id);
             if (tempCart == null)

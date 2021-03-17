@@ -29,7 +29,11 @@ namespace Service.API.Catalog.Infrastructure
                 new { Id = "48d5553e-a450-4523-a143-73263766b62b",Name = "Chicken Fillets",     Packaging = "6 x 100g",                         PriceValue = 4.50m,     PriceUnit = "GBP" , InventoryQuantity = 12, Sku="MP-000001", CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf" },
                 new { Id = "e547f80c-55ff-4541-81e7-d84f55cfdae2",Name = "Sirloin Steaks",      Packaging = "4 x 6-8oz",                        PriceValue = 45.70m,    PriceUnit = "GBP" , InventoryQuantity = 6,  Sku="MP-000002", CategoryId = "5beff28e-bba2-4b1b-9f06-126d6365d4cf" },
                 
-                new { Id = "34f98921-e46a-4937-872b-e2c57e705f3f",Name = "Cauliflower Florets", Packaging = "10 x 500g", OldPriceValue = 6.75m, PriceValue = 5.00m,     PriceUnit = "GBP" , InventoryQuantity = 5,  Sku="FV-000001", CategoryId = "fd6055d7-08a3-4351-8195-7da47e50f028" }
+                new { Id = "34f98921-e46a-4937-872b-e2c57e705f3f",Name = "Cauliflower Florets", Packaging = "10 x 500g", OldPriceValue = 6.75m, PriceValue = 5.00m,     PriceUnit = "GBP" , InventoryQuantity = 5,  Sku="FV-000001", CategoryId = "fd6055d7-08a3-4351-8195-7da47e50f028" },
+                
+                new { Id = "77e63e97-b41a-4882-9574-52a3738fd93f",Name = "Coca-Cola",               Packaging = "6 x 2L",           OldPriceValue = 8.50m,  PriceValue = 8.30m,     PriceUnit = "GBP" , InventoryQuantity = 6,      Sku="DR-000001", CategoryId = "737c9710-e069-436a-a236-660e8277dedf" },
+                new { Id = "d2fb685f-86dd-47ac-bb23-8ffd8ce84941",Name = "Still Mineral Water",     Packaging = "6 x 24 x 500ml",                           PriceValue = 21.75m,    PriceUnit = "GBP" , InventoryQuantity = 9,      Sku="DR-000002", CategoryId = "737c9710-e069-436a-a236-660e8277dedf" },
+                new { Id = "bf7b5f89-a569-4e3d-acb8-04a07e1e1130",Name = "Sparkling Mineral Water", Packaging = "6 x 24 x 500ml",                           PriceValue = 25.83m,    PriceUnit = "GBP" , InventoryQuantity = 16,     Sku="DR-000003", CategoryId = "737c9710-e069-436a-a236-660e8277dedf" }
             );
             
             

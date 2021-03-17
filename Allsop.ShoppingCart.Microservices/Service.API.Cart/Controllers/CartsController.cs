@@ -109,6 +109,7 @@ namespace Service.API.Cart.Controllers
                     AddedAt = DateTime.Now,
                     CartId = cart.Id
                 };
+                await _cartRepository.InsertOrUpdateCart(cart);
                 await _cartItemRepository.InsertCartItem(cartItem);
             }
             else

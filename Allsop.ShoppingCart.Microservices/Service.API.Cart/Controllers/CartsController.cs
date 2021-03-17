@@ -69,7 +69,7 @@ namespace Service.API.Cart.Controllers
         [HttpPost]
         [Route("Me")]
         [Authorize]
-        public async Task<ResultViewModel> InsertToCart([FromBody] AdjustCartItemViewModel model)
+        public async Task<ResultViewModel> InsertToCart([FromBody] AdjustCartItemRequestViewModel model)
         {
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
@@ -84,7 +84,7 @@ namespace Service.API.Cart.Controllers
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.Product.Id == model.ProductId);
 
             CartViewModel cartViewModel;
             if (model.Quantity <= 0)
@@ -103,7 +103,7 @@ namespace Service.API.Cart.Controllers
             {
                 cartItem = new CartItem
                 {
-                    ProductId = model.ProductId,
+                    ProductId = Guid.Parse(model.ProductId),
                     Quantity = model.Quantity,
                     AddedAt = DateTime.Now,
                     CartId = cart.Id
@@ -132,7 +132,7 @@ namespace Service.API.Cart.Controllers
         [HttpPost]
         [Route("Me/DiscountCode")]
         [Authorize]
-        public async Task<ResultViewModel> AddDiscountCodeToCart([FromBody] AddDiscountCodeViewModel model)
+        public async Task<ResultViewModel> AddDiscountCodeToCart([FromBody] AddDiscountCodeRequestViewModel model)
         {
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
@@ -162,7 +162,7 @@ namespace Service.API.Cart.Controllers
         [HttpPut]
         [Route("Me")]
         [Authorize]
-        public async Task<ResultViewModel> AddToCart([FromBody] AdjustCartItemViewModel model)
+        public async Task<ResultViewModel> AddToCart([FromBody] AdjustCartItemRequestViewModel model)
         {
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
@@ -177,14 +177,14 @@ namespace Service.API.Cart.Controllers
 
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId.ToString() == model.ProductId);
 
             CartViewModel cartViewModel;
             if (cartItem == null && model.Quantity > 0)
             {
                 cartItem = new CartItem
                 {
-                    ProductId = model.ProductId,
+                    ProductId = Guid.Parse(model.ProductId),
                     Quantity = model.Quantity,
                     AddedAt = DateTime.Now,
                     CartId = cart.Id
@@ -237,7 +237,7 @@ namespace Service.API.Cart.Controllers
         [HttpDelete]
         [Route("Me")]
         [Authorize]
-        public async Task<ResultViewModel> RemoveFromCart([FromBody] DeleteCartItemViewModel model)
+        public async Task<ResultViewModel> RemoveFromCart([FromBody] DeleteCartItemRequestViewModel model)
         {
             var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
 
@@ -253,7 +253,7 @@ namespace Service.API.Cart.Controllers
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == model.ProductId);
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId.ToString() == model.ProductId);
 
             if (cartItem == null)
             {

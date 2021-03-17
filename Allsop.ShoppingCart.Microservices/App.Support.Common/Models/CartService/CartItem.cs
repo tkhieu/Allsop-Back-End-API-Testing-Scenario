@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using App.Support.Common.Models.CatalogService;
 using App.Support.Common.Protos.Cart;
 
 namespace App.Support.Common.Models.CartService
@@ -10,9 +11,11 @@ namespace App.Support.Common.Models.CartService
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
-        public string Id { get; init; }
+        public Guid Id { get; init; }
         
-        public string ProductId { get; init; }
+        public Guid ProductId { get; set; }
+        
+        public Product Product { get; set; }
         
         public long Quantity { get; set; }
         
@@ -23,10 +26,10 @@ namespace App.Support.Common.Models.CartService
         public CartItemDTO GenerateCartItemDto()
         {
             CartItemDTO cartItemDto = new CartItemDTO();
-            cartItemDto.Id = this.Id;
-            cartItemDto.Quantity = (uint) this.Quantity;
-            cartItemDto.AddedAt = this.AddedAt.ToString();
-            cartItemDto.ProductId = this.ProductId;
+            cartItemDto.Id = Id.ToString();
+            cartItemDto.Quantity = (uint) Quantity;
+            cartItemDto.AddedAt = AddedAt.ToString();
+            cartItemDto.ProductId = ProductId.ToString();
 
             return cartItemDto;
         }

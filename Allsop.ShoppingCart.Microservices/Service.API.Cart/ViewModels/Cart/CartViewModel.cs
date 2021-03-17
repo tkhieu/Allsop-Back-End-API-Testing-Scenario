@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
 using App.Support.Common.Models.CatalogService;
 using App.Support.Common.Protos.Promotion;
+using NodaMoney;
 
 namespace Service.API.Cart.ViewModels.Cart
 {
@@ -20,24 +20,39 @@ namespace Service.API.Cart.ViewModels.Cart
         public string DiscountCode { get; set; }
         
         public DiscountCampaignDTO DiscountCampaignDto { get; set; }
+        
+        public decimal SubTotalAmount { get; set; }
+        
+        public decimal DiscountAmount { get; set; }
+        
+        public decimal TotalAmount { get; set; }
+        
+        public string AmountUnit { get; set; }
 
         public CartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
 
-            this.Id = Guid.Parse(cart.Id);
+            Id = Guid.Parse(cart.Id);
 
-            this.AccountId = cart.AccountId;
+            AccountId = cart.AccountId;
 
-            this.CreatedAt = cart.CreatedAt;
+            CreatedAt = cart.CreatedAt;
 
-            this.CartItems = new List<CartItemViewModel>();
+            CartItems = new List<CartItemViewModel>();
 
-            this.DiscountCode = cart.DiscountCode;
+            DiscountCode = cart.DiscountCode;
+
+            var subTotalAmount = 0m;
             
             foreach (var cartItem in cart.CartItems)
             {
-                this.CartItems.Add(new CartItemViewModel(cartItem));
+                CartItems.Add(new CartItemViewModel(cartItem));
+                subTotalAmount += cartItem.Product.PriceValue;
             }
+
+            SubTotalAmount = subTotalAmount;
+
+            TotalAmount = SubTotalAmount - DiscountAmount;
         }
     }
 
@@ -52,16 +67,34 @@ namespace Service.API.Cart.ViewModels.Cart
         public long Quantity { get; set; }
 
         public DateTime AddedAt { get; set; }
+        
+        public Money ItemSubTotalAmount { get; set; }
+        
+        public Money ItemDiscountAmount { get; set; }
+        
+        public Money ItemTotalAmount { get; set; }
 
         public CartItemViewModel(CartItem cartItem)
         {
-            this.Id = Guid.Parse(cartItem.Id);
+            Id = cartItem.Id;
 
-            this.ProductId = Guid.Parse(cartItem.ProductId);
+            ProductId = cartItem.ProductId;
 
-            this.Quantity = cartItem.Quantity;
+            Quantity = cartItem.Quantity;
 
-            this.AddedAt = cartItem.AddedAt;
+            AddedAt = cartItem.AddedAt;
         }
+    }
+
+
+    public class AdjustCartItemRequestViewModel
+    {
+        public string ProductId { get; set; }
+        public long Quantity { get; set; }
+    }
+    
+    public class DeleteCartItemRequestViewModel
+    {
+        public string ProductId { get; set; }
     }
 }

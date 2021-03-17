@@ -24,6 +24,7 @@ namespace Service.API.Promotion.Services.DiscountCode
                     discountCode.Code = viewModel.SingleCode;
                     discountCode.NormalizedCode = viewModel.SingleCode.Normalize();
                     discountCode.Status = DiscountCodeStatus.Active;
+                    discountCode.MaxRedeem = viewModel.MaxRedeem;
                     
                     discountCodes.Add(discountCode);
                     
@@ -39,7 +40,8 @@ namespace Service.API.Promotion.Services.DiscountCode
                         {
                             Id = Guid.NewGuid(),
                             Code = viewModel.CodePrefix + "-" + DiscountCodeHelper.RandomString(5),
-                            Status = DiscountCodeStatus.Active
+                            Status = DiscountCodeStatus.Active,
+                            MaxRedeem = 1
                         };
 
                         discountCode.NormalizedCode = DiscountCodeHelper.ReplaceDash(discountCode.Code).Normalize();

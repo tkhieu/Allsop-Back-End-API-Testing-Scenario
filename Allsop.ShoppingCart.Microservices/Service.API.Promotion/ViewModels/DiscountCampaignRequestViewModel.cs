@@ -23,6 +23,8 @@ namespace Service.API.Promotion.ViewModels
         
         public string CodePrefix { get; set; }
         
+        public int MaxRedeem { get; set; }
+        
         public List<DiscountValidationRequestViewModel> DiscountValidations { get; set; }
     }
 }

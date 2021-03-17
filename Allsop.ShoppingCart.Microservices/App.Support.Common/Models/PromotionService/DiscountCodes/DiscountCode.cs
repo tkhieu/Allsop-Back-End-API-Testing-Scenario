@@ -12,6 +12,8 @@ namespace App.Support.Common.Models.PromotionService.DiscountCodes
         public string NormalizedCode { get; set; }
         public DiscountCodeStatus Status { get; set; }
         public Guid DiscountCampaignId { get; set; }
+        
+        public int MaxRedeem { get; set; }
 
         public virtual ICollection<Redemption> Redemptions { get; set; }
     }

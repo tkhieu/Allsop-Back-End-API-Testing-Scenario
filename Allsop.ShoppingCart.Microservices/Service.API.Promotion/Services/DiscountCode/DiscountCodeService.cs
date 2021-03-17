@@ -1,7 +1,58 @@
+using System;
+using System.Collections.Generic;
+using App.Support.Common;
+using App.Support.Common.Models.PromotionService.DiscountCampaigns;
+using App.Support.Common.Models.PromotionService.DiscountCodes;
+using Service.API.Promotion.ViewModels;
+
 namespace Service.API.Promotion.Services.DiscountCode
 {
-    public class DiscountCodeService
+    public class DiscountCodeService: IDiscountCodeService
     {
-        
+        public ICollection<App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode> GenerateDiscountCodesFromDiscountCampaignViewModel(DiscountCampaignRequestViewModel viewModel)
+        {
+            ICollection<App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode> discountCodes =
+                new List<App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode>();
+            
+            switch (viewModel.CodeType)
+            {
+                case CodeType.SingleCode:
+                {
+                    var discountCode = new App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode();
+                    
+                    discountCode.Id = Guid.NewGuid();
+                    discountCode.Code = viewModel.SingleCode;
+                    discountCode.NormalizedCode = viewModel.SingleCode.Normalize();
+                    discountCode.Status = DiscountCodeStatus.Active;
+                    
+                    discountCodes.Add(discountCode);
+                    
+                    break;
+                }
+                case CodeType.BulkCodes:
+                {
+                    var count = viewModel.CodesAmount;
+
+                    for (var i = 0; i < count; i++)
+                    {
+                        var discountCode = new App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode
+                        {
+                            Id = Guid.NewGuid(),
+                            Code = viewModel.CodePrefix + "-" + DiscountCodeHelper.RandomString(5),
+                            Status = DiscountCodeStatus.Active
+                        };
+
+                        discountCode.NormalizedCode = DiscountCodeHelper.ReplaceDash(discountCode.Code).Normalize();
+                        
+                        discountCodes.Add(discountCode);
+                    }
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return discountCodes;
+        }
     }
 }

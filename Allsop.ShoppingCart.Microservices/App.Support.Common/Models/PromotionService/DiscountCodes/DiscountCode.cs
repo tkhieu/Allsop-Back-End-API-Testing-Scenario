@@ -10,16 +10,8 @@ namespace App.Support.Common.Models.PromotionService.DiscountCodes
         public Guid Id { get; set; }
         public string Code { get; set; }
         public string NormalizedCode { get; set; }
-        public int Status { get; set; }
+        public DiscountCodeStatus Status { get; set; }
         public Guid DiscountCampaignId { get; set; }
-        public virtual DiscountCampaign DiscountCampaign { get; set; }
-
-        public string CreatedBy { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTimeOffset ModifiedAt { get; set; }
-        public string DeletedBy { get; set; }
-        public DateTimeOffset? DeletedAt { get; set; }
 
         public virtual ICollection<Redemption> Redemptions { get; set; }
     }

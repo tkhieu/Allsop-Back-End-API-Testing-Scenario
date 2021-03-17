@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using Service.API.Promotion.Infrastructure;
 using Service.API.Promotion.Repositories.DiscountCampaign;
 using Service.API.Promotion.Services.DiscountCampaign;
+using Service.API.Promotion.Services.DiscountCode;
 using Service.API.Promotion.Services.DiscountValidation;
 
 namespace Service.API.Promotion
@@ -67,6 +68,7 @@ namespace Service.API.Promotion
             
             services.AddScoped<DiscountValidationService>();
             
+            services.AddScoped<DiscountCodeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Service.API.Promotion.Services.DiscountCode;
 using Service.API.Promotion.Services.DiscountValidation;
 using Service.API.Promotion.ViewModels;
 
@@ -9,10 +10,12 @@ namespace Service.API.Promotion.Services.DiscountCampaign
     public class DiscountCampaignService: IDiscountCampaignService
     {
         private IDiscountValidationService _discountValidationService;
+        private IDiscountCodeService _discountCodeService;
 
-        public DiscountCampaignService(DiscountValidationService discountValidationService)
+        public DiscountCampaignService(DiscountValidationService discountValidationService, DiscountCodeService discountCodeService)
         {
-            this._discountValidationService = discountValidationService;
+            _discountValidationService = discountValidationService;
+            _discountCodeService = discountCodeService;
         }
         
         public App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign GenerateDiscountCampaignFromViewModel(DiscountCampaignRequestViewModel viewModel)
@@ -39,8 +42,8 @@ namespace Service.API.Promotion.Services.DiscountCampaign
                 discountCampaign.DiscountValidations.Add(discountValidation);
             }
 
-
-
+            var discountCodes = _discountCodeService.GenerateDiscountCodesFromDiscountCampaignViewModel(viewModel);
+            discountCampaign.DiscountCodes = discountCodes;
 
             return discountCampaign;
             

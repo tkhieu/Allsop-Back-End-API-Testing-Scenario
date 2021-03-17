@@ -1,5 +1,6 @@
 using System.Text;
 using App.Support.Common.Middlewares;
+using App.Support.Common.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +14,6 @@ using Service.API.Catalog.Infrastructure;
 using Service.API.Catalog.Repositories.Category;
 using Service.API.Catalog.Repositories.Product;
 using Service.API.Catalog.Services.gRPC;
-using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Catalog
 {

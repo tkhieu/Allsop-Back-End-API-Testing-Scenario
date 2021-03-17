@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Support.Common.Configurations;
+using App.Support.Common.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Service.API.Identity.Infrastructure;
 
 namespace App.Support.Common.Middlewares
 {

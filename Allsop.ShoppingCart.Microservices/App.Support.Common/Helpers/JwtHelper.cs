@@ -4,8 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using App.Support.Common.Models;
 using App.Support.Common.Models.IdentityService;
+using App.Support.Common.Shared;
 using Microsoft.IdentityModel.Tokens;
-using Service.API.Identity.Infrastructure;
 
 namespace App.Support.Common
 {

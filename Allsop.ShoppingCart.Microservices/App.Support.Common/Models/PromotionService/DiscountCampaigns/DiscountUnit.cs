@@ -4,6 +4,6 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
     {
         Money,
         Percentage,
-        ProductOption
+        Product
     }
 }

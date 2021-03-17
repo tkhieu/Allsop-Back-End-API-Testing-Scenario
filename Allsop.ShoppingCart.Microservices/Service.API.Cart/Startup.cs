@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Middlewares;
+using App.Support.Common.Shared;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,7 +22,6 @@ using Service.API.Cart.Infrastructure;
 using Service.API.Cart.Repositories.Cart;
 using Service.API.Cart.Repositories.CartItem;
 using Service.API.Cart.Services.Cart;
-using Service.API.Identity.Infrastructure;
 
 namespace Service.API.Cart
 {

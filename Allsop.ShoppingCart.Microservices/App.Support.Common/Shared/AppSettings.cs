@@ -1,4 +1,4 @@
-namespace Service.API.Identity.Infrastructure
+namespace App.Support.Common.Shared
 {
     public class AppSettings
     {

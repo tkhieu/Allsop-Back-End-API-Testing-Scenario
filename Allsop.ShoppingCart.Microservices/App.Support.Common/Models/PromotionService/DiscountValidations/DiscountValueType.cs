@@ -2,12 +2,10 @@ namespace App.Support.Common.Models.PromotionService.DiscountValidations
 {
     public enum DiscountValueType
     {
-        INT,
-        FLOAT,
-        PRODUCT,
-        PRODUCT_CAT,
-        DATE_TIME,
-        ARR_PRODUCT,
-        ARR_PRODUCT_CAT
+        Int = 1,
+        Float = 2,
+        Product = 3,
+        ProductCat = 4,
+        DateTime = 5
     }
 }

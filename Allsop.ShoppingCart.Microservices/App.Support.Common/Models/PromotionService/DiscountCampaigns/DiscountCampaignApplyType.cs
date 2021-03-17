@@ -1,8 +1,7 @@
 namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
 {
-    public enum CodeType
+    public enum DiscountCampaignType
     {
-        BULK_CODES,
-        SINGLE_CODE
+        Global = 1
     }
 }

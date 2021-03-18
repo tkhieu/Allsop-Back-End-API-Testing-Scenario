@@ -1,15 +1,15 @@
-## Allsop-Back-End-API-Testing-Scenario
+# Allsop-Back-End-API-Testing-Scenario
 
 
-## A. Toolings
+## Toolings
 
 * [JetBrain Rider](https://www.jetbrains.com/rider/)
 * [VSCode](https://code.visualstudio.com/) 
 
-## B. Database
+## Database
 * SQLite
 
-## C. System Design
+## System Design
 
 * Microservices
 * Inter communication using gRPC

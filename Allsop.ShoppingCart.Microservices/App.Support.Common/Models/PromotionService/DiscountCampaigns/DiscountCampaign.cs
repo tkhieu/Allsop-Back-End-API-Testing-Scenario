@@ -57,9 +57,29 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
             return discountCampaignDto;
         }
         
-        public static DiscountCampaign GenerateDiscountCampaignFromGrpcDto(DiscountCampaignDTO productDto)
+        public static DiscountCampaign GenerateDiscountCampaignFromGrpcDto(DiscountCampaignDTO discountCampaignDto)
         {
-            return new DiscountCampaign();
+            var discountCampaign = new DiscountCampaign
+            {
+                Id = Guid.Parse(discountCampaignDto.Id),
+                Name = discountCampaignDto.Name,
+                CodePrefix = discountCampaignDto.CodePrefix,
+                DiscountValue = discountCampaignDto.DiscountValue.ToDecimal(),
+                ExpirationDate = DateTimeOffset.Parse(discountCampaignDto.ExpirationDate),
+                StartDate = DateTimeOffset.Parse(discountCampaignDto.StartDate)
+            };
+            
+            if(!discountCampaignDto.ApplyOnId.Equals(""))
+                discountCampaign.ApplyOnId = Guid.Parse(discountCampaignDto.ApplyOnId);
+            if(!discountCampaignDto.DiscountUnitId.Equals(""))
+                discountCampaign.DiscountUnitId = Guid.Parse(discountCampaignDto.DiscountUnitId);
+
+            discountCampaign.DiscountCampaignType =
+                DiscountCampaignTypeEnum.Convert((int)discountCampaignDto.DiscountCampaignType);
+
+            discountCampaign.DiscountCampaignApplyOn =
+                DiscountCampaignApplyOnEnum.Convert((int) discountCampaignDto.DiscountCampaignApplyOn);
+            return discountCampaign;
         }
     }
 }

@@ -6,6 +6,7 @@ using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
 using App.Support.Common.Models.CatalogService;
+using App.Support.Common.Models.PromotionService.DiscountCampaigns;
 using App.Support.Common.Protos.Cart;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.Protos.Common;
@@ -113,10 +114,36 @@ namespace Service.API.Cart.Services.Cart
 
         }
         
-        
-
         public async Task<CartViewModel> GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
+            
+            var discountCampaignDto = await GetDiscountCampaignDetail(cart.DiscountCode);
+            var discountCampaign = DiscountCampaign.GenerateDiscountCampaignFromGrpcDto(discountCampaignDto);
+
+            var isDiscountOnBill = false;
+            var isDiscountOnCategory = false;
+            var discountCategory = "";
+
+            switch (discountCampaign.DiscountCampaignApplyOn)
+            {
+                case DiscountCampaignApplyOn.Bill:
+                {
+                    isDiscountOnBill = true;
+                    break;
+                }
+                case DiscountCampaignApplyOn.ProductCategory:
+                {
+                    if (discountCampaign.ApplyOnId != null)
+                    {
+                        discountCategory = discountCampaign.ApplyOnId.Value.ToString();
+                    }
+                    isDiscountOnCategory = true;
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            
             var cartViewModel = new CartViewModel(cart);
 
             var subTotalAmount = 0m;
@@ -131,13 +158,52 @@ namespace Service.API.Cart.Services.Cart
                 
                 cartItemViewModel.ItemSubTotalAmount = product.PriceValue * cartItemViewModel.Quantity;
                 subTotalAmount += cartItemViewModel.ItemSubTotalAmount;
+
+                if (cartItemViewModel.Product.Category.Id == discountCategory)
+                {
+                    switch (discountCampaign.DiscountCampaignType)
+                    {
+                        case DiscountCampaignType.Percentage:
+                        {
+                            if (discountCampaign.DiscountValue != null)
+                                cartItemViewModel.ItemDiscountAmount = cartItemViewModel.ItemSubTotalAmount *
+                                    discountCampaign.DiscountValue.Value / 100;
+                            break;
+                        }
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 
-                cartItemViewModel.ItemDiscountAmount = 0m;
                 discountAmount += cartItemViewModel.ItemDiscountAmount;
                 
                 cartItemViewModel.ItemTotalAmount =
                     cartItemViewModel.ItemSubTotalAmount - cartItemViewModel.ItemDiscountAmount;
                 totalAmount += cartItemViewModel.ItemTotalAmount;
+            }
+            
+            switch (discountCampaign.DiscountCampaignType)
+            {
+                case DiscountCampaignType.Money:
+                {
+                    switch (discountCampaign.DiscountCampaignApplyOn)
+                    {
+                        case DiscountCampaignApplyOn.Bill:
+                        {
+                            if (discountCampaign.DiscountValue != null)
+                            {
+                                discountAmount = discountCampaign.DiscountValue.Value;
+                                totalAmount -= discountAmount;
+                            }
+                        }
+                        break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    break;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             cartViewModel.SubTotalAmount = subTotalAmount;
@@ -146,8 +212,9 @@ namespace Service.API.Cart.Services.Cart
 
             if (cart.DiscountCode == null) return cartViewModel;
             
-            var discountCampaignDto = await GetDiscountCampaignDetail(cart.DiscountCode);
             cartViewModel.DiscountCampaignDto = discountCampaignDto;
+
+            cartViewModel.AmountUnit = "GPB";
             
             return cartViewModel;
             

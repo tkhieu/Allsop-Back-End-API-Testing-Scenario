@@ -1,3 +1,4 @@
+
 # Allsop-Back-End-API-Testing-Scenario
 
 
@@ -8,6 +9,27 @@
 
 ## Database
 * SQLite
+
+## Sourcode folders
+![enter image description here](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/add-assets/Assets/SourceCodeFolders.png)
+
+1. **Common Project**
+* Configuration: The global configurations for any services can use
+* gRPC: The simple Abstract Factory to new a gRPC client without know the destination address
+* Helpers: Some minor helpers to help encode/decode JWT and generate unique Coupon Code
+* Middlewares: Holding the middlewares that intercept every request, for example JWT Middleware to decode and get User Id from JWT token
+* Models: Share model accross services
+* Protos: Share proto and generate necessary class to interactive with gRPC sevices
+* Shared: Just holding `AppSettings` for now, will be merge to `Configuration`
+* ViewModel: Common view models for API return
+
+2. **Services Project** (in the screenshot is Cart Service)
+* Controllers: Very basic folder to hold services controllers
+* Infrastructure: Mainly for some important classes such as `DbContext`
+* Migrations: Migraions script that generated from EF Core
+* Repositories: Containt repository to interactive with db
+* Services: Containt repository to manipulate data
+* ViewModes: View models for API return
 
 ## System Design
 

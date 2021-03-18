@@ -292,5 +292,36 @@ namespace Service.API.Cart.Controllers
                 Status = Status.Success
             };
         }
+        
+        [HttpDelete]
+        [Route("Me/EmptyCart")]
+        [Authorize]
+        public async Task<ResultViewModel> EmptyCartFromCart()
+        {
+            var accountId = HttpContext.Items[AppConsts.HttpContextItemAccountId]?.ToString();
+
+            if (accountId == null)
+                return new ResultViewModel
+                {
+                    Data = null,
+                    Message = "Error: You must login before add Cart Item into Cart",
+                    Status = Status.Error
+                };
+
+
+            var cart = _cartRepository.GetCartByAccountId(accountId) ??
+                       _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
+
+            await _cartService.EmptyCart(cart);
+            
+           var newCart = _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
+            
+            return new ResultViewModel
+            {
+                Data = newCart,
+                Message = "Success",
+                Status = Status.Success
+            };
+        }
     }
 }

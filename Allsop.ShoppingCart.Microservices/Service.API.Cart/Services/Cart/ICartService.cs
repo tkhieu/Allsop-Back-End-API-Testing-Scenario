@@ -16,5 +16,6 @@ namespace Service.API.Cart.Services.Cart
         Task<ValidateDiscountCodeDTO> ValidateDiscountCode(App.Support.Common.Models.CartService.Cart cart,
             string discountCode);
         Task<bool> RemoveDiscountCode(App.Support.Common.Models.CartService.Cart cart);
+        Task<bool> EmptyCart(App.Support.Common.Models.CartService.Cart cart);
     }
 }

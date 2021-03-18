@@ -11,6 +11,7 @@ using App.Support.Common.Protos.Catalog;
 using App.Support.Common.Protos.Common;
 using App.Support.Common.Protos.Promotion;
 using Service.API.Cart.Repositories.Cart;
+using Service.API.Cart.Repositories.CartItem;
 using Service.API.Cart.ViewModels.Cart;
 
 namespace Service.API.Cart.Services.Cart
@@ -19,11 +20,13 @@ namespace Service.API.Cart.Services.Cart
     {
         private readonly IGrpcClientFactory _grpcClientFactory;
         private readonly ICartRepository _cartRepository;
+        private readonly ICartItemRepository _cartItemRepository;
 
-        public CartService(GrpcClientFactory grpcClientFactory, CartRepository cartRepository)
+        public CartService(GrpcClientFactory grpcClientFactory, CartRepository cartRepository, CartItemRepository cartItemRepository)
         {
             _grpcClientFactory = grpcClientFactory;
             _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
         }
         
         public App.Support.Common.Models.CartService.Cart GenerateAnEmptyCart(Guid accountId)
@@ -83,6 +86,17 @@ namespace Service.API.Cart.Services.Cart
         {
             cart.DiscountCode = null;
             await _cartRepository.InsertOrUpdateCart(cart);
+            return true;
+        }
+
+        public async Task<bool> EmptyCart(App.Support.Common.Models.CartService.Cart cart)
+        {
+            foreach (var cartItem in cart.CartItems)
+            {
+                await _cartItemRepository.DeleteCartItem(cartItem);
+            }
+            _cartRepository.DeleteCart(cart);
+
             return true;
         }
 

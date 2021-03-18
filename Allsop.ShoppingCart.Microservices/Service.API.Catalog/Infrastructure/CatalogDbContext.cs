@@ -40,10 +40,6 @@ namespace Service.API.Catalog.Infrastructure
                 new { Id = "89090eed-5f8d-44bd-ac60-af45256c92ec",Name = "Free-Range Eggs",         Packaging = "10 x 12 each",                             PriceValue = 9.52m,     PriceUnit = "GBP" , InventoryQuantity = 9,     Sku="CI-000003", CategoryId = "3786f39a-a229-4689-aed7-d851082cd87a" },
                 new { Id = "e337af6b-c746-4d04-9dac-f57cc52a6158",Name = "Caster Sugar",            Packaging = "16 x 750g",                                PriceValue = 12.76m,    PriceUnit = "GBP" , InventoryQuantity = 13,    Sku="CI-000004", CategoryId = "3786f39a-a229-4689-aed7-d851082cd87a" }
             );
-            
-            
-            
-            
             base.OnModelCreating(modelBuilder);
         }
 

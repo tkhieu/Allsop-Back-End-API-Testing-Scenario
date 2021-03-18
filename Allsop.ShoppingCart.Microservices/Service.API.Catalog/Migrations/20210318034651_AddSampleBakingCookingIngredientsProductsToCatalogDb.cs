@@ -2,7 +2,7 @@
 
 namespace Service.API.Catalog.Migrations
 {
-    public partial class AddSampleBakingCookingIngredientsProductsToCatalogDb : Migration
+    public partial class  AddSampleBakingCookingIngredientsProductsToCatalogDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

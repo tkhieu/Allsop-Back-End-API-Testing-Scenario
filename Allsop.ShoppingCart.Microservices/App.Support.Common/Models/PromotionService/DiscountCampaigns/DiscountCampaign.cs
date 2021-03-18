@@ -29,14 +29,16 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
         public virtual ICollection<Redemption> Redemptions { get; set; }
         public virtual ICollection<DiscountValidation> DiscountValidations { get; set; }
         
-        public DiscountCampaignDTO GenerateGrpcDtoFromProduct()
+        public DiscountCampaignDTO GenerateGrpcDtoFromDiscountCampaign()
         {
             var discountCampaignDto = new DiscountCampaignDTO
             {
-                Id = this.Id.ToString(), Name = this.Name, CodePrefix = this.CodePrefix
+                Id = this.Id.ToString(), Name = this.Name, 
             };
             
             var discountValue = this.DiscountValue;
+            if (this.CodePrefix != null)
+                discountCampaignDto.CodePrefix = CodePrefix;
             if (discountValue != null)
                 discountCampaignDto.DiscountValue = DecimalValue.FromDecimal(discountValue.Value);
             discountCampaignDto.StartDate = this.StartDate.ToString();

@@ -35,7 +35,7 @@ namespace Service.API.Promotion.Services.gRPC
 
             var discountCampaignObj = await _discountCampaignRepository.GetById(discountCampaignId);
 
-            var discountCampaignDto = discountCampaignObj.GenerateGrpcDtoFromProduct();
+            var discountCampaignDto = discountCampaignObj.GenerateGrpcDtoFromDiscountCampaign();
 
             var returnSingleDiscountCampaign = new ReturnSingleDiscountCampaign
             {

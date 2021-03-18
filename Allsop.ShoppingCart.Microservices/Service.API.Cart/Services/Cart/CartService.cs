@@ -6,6 +6,7 @@ using App.Support.Common.gRPC.Clients;
 using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
 using App.Support.Common.Models.CatalogService;
+using App.Support.Common.Protos.Cart;
 using App.Support.Common.Protos.Catalog;
 using App.Support.Common.Protos.Common;
 using App.Support.Common.Protos.Promotion;
@@ -51,6 +52,19 @@ namespace Service.API.Cart.Services.Cart
 
             return product;
         }
+        
+        public async Task<ProductDTO> GetProductDtoFromProductId(Guid productId)
+        {
+            var rq = new GetSingleProductRequest()
+            {
+                ProductId = productId.ToString()
+            };
+            var catalogGrpcClient = _grpcClientFactory.CreateCatalogGrpcClient();
+            var response = await catalogGrpcClient.GetProductAsync(rq);
+            var productDto = response.Product;
+            
+            return productDto;
+        }
 
         public async Task<ValidateDiscountCodeDTO> ValidateDiscountCode(App.Support.Common.Models.CartService.Cart cart,
             string discountCode)
@@ -59,7 +73,7 @@ namespace Service.API.Cart.Services.Cart
             var rq = new ValidateDiscountCodeWithCartRequest()
             {
                 DiscountCode = discountCode,
-                Cart = cart.GenerateCartDto()
+                Cart = await GenerateCartDto(cart)
             };
             var response = await promotionGrpcClient.ValidateDiscountCodeAsync(rq);
             return response.ValidateDiscountCode;
@@ -123,6 +137,46 @@ namespace Service.API.Cart.Services.Cart
             
             return cartViewModel;
             
+        }
+
+        public async Task<CartDTO> GenerateCartDto(App.Support.Common.Models.CartService.Cart cart)
+        {
+            var subTotalAmount = 0m;
+            var cartDto = new CartDTO {Id = cart.Id, AccountId = cart.AccountId.ToString(), CreatedAt = cart.CreatedAt.ToString()};
+            
+            if (cart.DiscountCode != null)
+            {
+                cartDto.DiscountCode = cart.DiscountCode;
+            }
+
+            foreach (var cartItem in cart.CartItems)
+            {
+                var cartItemDto = await GenerateCartItemDto(cartItem);
+                subTotalAmount += cartItemDto.ItemSubTotalAmount.ToDecimal();
+                cartDto.CartItems.Add(cartItemDto);
+            }
+            cartDto.SubTotalAmount = DecimalValue.FromDecimal(subTotalAmount);
+
+            return cartDto;
+        }
+        
+        public async Task<CartItemDTO> GenerateCartItemDto(CartItem cartItem)
+        {
+            var cartItemDto = new CartItemDTO
+            {
+                Id = cartItem.Id.ToString(),
+                Quantity = (uint) cartItem.Quantity,
+                AddedAt = cartItem.AddedAt.ToString(),
+                ProductId = cartItem.ProductId.ToString()
+            };
+
+            var productDto = await GetProductDtoFromProductId(Guid.Parse(cartItemDto.ProductId));
+            cartItemDto.Product = productDto;
+            
+            var itemSubTotalAmount = cartItemDto.Quantity * cartItemDto.Product.PriceValue.ToDecimal();
+            cartItemDto.ItemSubTotalAmount = DecimalValue.FromDecimal(itemSubTotalAmount);
+
+            return cartItemDto;
         }
 
         public async Task<ValidateDiscountCodeDTO> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode)

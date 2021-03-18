@@ -95,9 +95,12 @@ namespace Service.API.Promotion.Services.gRPC
                     Message = "This campaign not yet start"
                 };
             }
-            
+
             // Check discountValidations
             var discountValidations = discountCampaignObj.DiscountValidations;
+
+            var productCatId = "";
+            var productCatName = "";
             foreach (var discountValidation in discountValidations)
             {
                 switch (discountValidation.ValueType)
@@ -108,6 +111,14 @@ namespace Service.API.Promotion.Services.gRPC
                         {
                             case DiscountValidationOperator.MoreThan:
                             {
+                                if (cartDto.SubTotalAmount < decimal.Parse(discountValidation.Value))
+                                {
+                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                                    {
+                                        IsValid = false,
+                                        Message = "Subtotal amount less than discount code condition"
+                                    };
+                                }
                                 break;   
                             }
                             default:
@@ -115,12 +126,45 @@ namespace Service.API.Promotion.Services.gRPC
                         }
                         break;
                     }
+                    
+                    case DiscountValidationValueType.ProductCat:
+                    {
+                        switch (discountValidation.Operator)
+                        {
+                            case DiscountValidationOperator.Is:
+                            {
+                                productCatId = discountValidation.Value;
+                                break;   
+                            }
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        break;
+                    }
+                    
                     case DiscountValidationValueType.Quantity:
                     {
                         switch (discountValidation.Operator)
                         {
                             case DiscountValidationOperator.MoreThan:
                             {
+
+                                var count = 0L;
+                                foreach (var cartItem in cartDto.CartItems)
+                                {
+                                    if (cartItem.Product.Category.Id != productCatId) continue;
+                                    productCatName = cartItem.Product.Category.Name;
+                                    count += cartItem.Quantity;
+                                }
+
+                                if (count < int.Parse(discountValidation.Value))
+                                {
+                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                                    {
+                                        IsValid = false,
+                                        Message = $"Product quantity of category {productCatName} less than discount code condition"
+                                    };
+                                }
                                 
                                 break;   
                             }
@@ -129,20 +173,7 @@ namespace Service.API.Promotion.Services.gRPC
                         }
                         break;
                     }
-                    case DiscountValidationValueType.ProductCat:
-                    {
-                        switch (discountValidation.Operator)
-                        {
-                            case DiscountValidationOperator.Is:
-                            {
-                                break;   
-                            }
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                        break;
-                    }
-
+                    
                     case DiscountValidationValueType.SpendingAmount:
                     {
                         switch (discountValidation.Operator)
@@ -150,6 +181,22 @@ namespace Service.API.Promotion.Services.gRPC
                             case DiscountValidationOperator.MoreThan:
                             {
                                 
+                                var spendingAmount = 0m;
+                                foreach (var cartItem in cartDto.CartItems)
+                                {
+                                    if (cartItem.Product.Category.Id != productCatId) continue;
+                                    productCatName = cartItem.Product.Category.Name;
+                                    spendingAmount += cartItem.ItemSubTotalAmount.ToDecimal();
+                                }
+
+                                if (spendingAmount < decimal.Parse(discountValidation.Value))
+                                {
+                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                                    {
+                                        IsValid = false,
+                                        Message = $"Spending amount of category {productCatName} less than discount code condition"
+                                    };
+                                }
                                 break;   
                             }
                             default:
@@ -157,18 +204,6 @@ namespace Service.API.Promotion.Services.gRPC
                         }
                         break;
                     }
-                    case DiscountValidationValueType.Product:
-                        break;
-                    case DiscountValidationValueType.DateTime:
-                        break;
-                    case DiscountValidationValueType.RedeemsTime:
-                        break;
-                    case DiscountValidationValueType.RedeemsPerUser:
-                        break;
-                    case DiscountValidationValueType.RedeemsPerUserPerDay:
-                        break;
-                    case DiscountValidationValueType.TotalDiscountAmount:
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }

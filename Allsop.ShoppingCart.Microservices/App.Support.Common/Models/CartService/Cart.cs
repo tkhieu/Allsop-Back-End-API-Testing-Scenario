@@ -18,21 +18,5 @@ namespace App.Support.Common.Models.CartService
         public ICollection<CartItem> CartItems { get; set; }
 
         public string DiscountCode { get; set; }
-
-        public CartDTO GenerateCartDto()
-        {
-            var cartDto = new CartDTO {Id = Id, AccountId = AccountId.ToString(), CreatedAt = CreatedAt.ToString()};
-            if (DiscountCode != null)
-            {
-                cartDto.DiscountCode = DiscountCode;
-            }
-
-            foreach (var cartItem in CartItems)
-            {
-                cartDto.CartItems.Add(cartItem.GenerateCartItemDto());
-            }
-
-            return cartDto;
-        }
     }
 }

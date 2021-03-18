@@ -1,16 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using App.Support.Common.Models;
+using App.Support.Common.Models.IdentityService;
+using App.Support.Common.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Service.API.Identity.Infrastructure;
+using Service.API.Identity.Services.Account;
 
 namespace Service.API.Identity
 {
@@ -26,11 +29,25 @@ namespace Service.API.Identity
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Read AppSettings
+            IConfigurationSection appSettings = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettings);
+            
+            // DbContext
+            services.AddDbContext<AppIdentityDbContext>(options =>
+            {
+                options.UseSqlite(@"Data Source=./identity.db",  b => b.MigrationsAssembly("Service.API.Identity"));
+            });
+            
+            services.AddIdentityCore<Account>(options => { });
+            services.AddScoped<IUserStore<Account>, UserOnlyStore<Account, AppIdentityDbContext>>();
+            services.AddScoped<AccountRepository>();
+            services.AddScoped<AccountService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Service.API.Identity", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Service.API.Identity", Version = "v1"});
             });
         }
 
@@ -48,12 +65,31 @@ namespace Service.API.Identity
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        public static IdentityBuilder AddIdentityCore<TUser>(ServiceCollection services,
+            Action<IdentityOptions> setupAction) where TUser: class
+        {
+            services.AddOptions().AddLogging();
+            
+            services.TryAddScoped<IUserValidator<TUser>, UserValidator<TUser>>();
+            services.TryAddScoped<IPasswordValidator<TUser>, PasswordValidator<TUser>>();
+            services.TryAddScoped<IPasswordHasher<TUser>, PasswordHasher<TUser>>();
+            services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
+            
+            services.TryAddScoped<IdentityErrorDescriber>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser>>();
+            services.TryAddScoped<UserManager<TUser>, UserManager<TUser>>();
+            if (setupAction != null)
             {
-                endpoints.MapControllers();
-            });
+                services.Configure(setupAction);
+            }
+        
+            return new IdentityBuilder(typeof(TUser), services);
         }
     }
 }

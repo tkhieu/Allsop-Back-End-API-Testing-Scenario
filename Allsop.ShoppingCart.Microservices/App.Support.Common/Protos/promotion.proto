@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "common.proto";
+import "cart.proto";
+
+option csharp_namespace = "App.Support.Common.Protos.Promotion";
+
+package promotion;
+
+service PromotionGrpc {
+  rpc GetDiscountDetail (GetDiscountCampaignDetailRequest) returns (ReturnSingleDiscountCampaign);
+  rpc ValidateDiscountCode (ValidateDiscountCodeWithCartRequest) returns (ReturnValidateDiscountCode);
+}
+//
+message GetDiscountCampaignDetailRequest {
+  string DiscountCode = 1;
+}
+
+message ReturnSingleDiscountCampaign {
+  common.GrpcStatus status = 1;
+  DiscountCampaignDTO discountCampaign = 2;
+}
+
+//
+message ValidateDiscountCodeWithCartRequest {
+  string DiscountCode = 1;
+  cart.CartDTO Cart = 2;
+}
+
+message ReturnValidateDiscountCode {
+  common.GrpcStatus status = 1;
+  ValidateDiscountCodeDTO ValidateDiscountCode= 2;
+}
+
+message ValidateDiscountCodeDTO {
+  bool IsValid = 1;
+  string Message = 2;
+}
+
+message DiscountValidationDTO {
+  string id = 1;
+  uint32 operator = 2;
+  uint32 valueType = 3;
+  string value = 4;
+  string discountCampaignId = 5;
+}
+
+message DiscountCampaignDTO {
+  
+  string id = 1;
+  string name = 2;
+  common.DecimalValue discountValue = 3;
+  string discountUnitId = 4;
+  string startDate = 5;
+  string expirationDate = 6;
+  uint32 discountCampaignType = 7;
+  uint32 discountCampaignApplyOn = 8;
+  string applyOnId = 9;
+  string codePrefix = 10;
+  repeated DiscountValidationDTO discountValidations = 13;
+}

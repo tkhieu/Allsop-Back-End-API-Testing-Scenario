@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+import "common.proto";
+
+option csharp_namespace = "App.Support.Common.Protos.Catalog";
+
+package catalog;
+
+service CatalogGrpc {
+  rpc GetProduct (GetSingleProductRequest) returns (ReturnSingleProduct);
+}
+
+message GetSingleProductRequest {
+  string ProductId = 1;
+}
+
+message CategoryDTO {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+}
+
+message ProductDTO {
+  string id = 1;
+  string name = 2;
+  string packaging = 3;
+  string sku = 4;
+  CategoryDTO category = 5;
+  common.DecimalValue priceValue = 6;
+  common.DecimalValue oldPriceValue = 7;
+  string priceUnit = 8;
+  int32 inventoryQuantity = 9;
+}
+
+message ReturnSingleProduct {
+  common.GrpcStatus status = 1;
+  ProductDTO product = 2;
+}

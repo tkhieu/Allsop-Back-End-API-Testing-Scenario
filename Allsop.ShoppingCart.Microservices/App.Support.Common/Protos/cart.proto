@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+import "catalog.proto";
+
+import "common.proto";
+
+option csharp_namespace = "App.Support.Common.Protos.Cart";
+
+package cart;
+
+message CartItemDTO {
+  string id = 1;
+  string productId = 2;
+  catalog.ProductDTO product = 3;
+  uint32 quantity = 4;
+  string addedAt = 5;
+  common.DecimalValue ItemSubTotalAmount = 6;
+}
+
+message CartDTO {
+  string id = 1;
+  string accountId = 2;
+  string createdAt = 3;
+  repeated CartItemDTO cartItems = 4;
+  string discountCode = 5;
+  common.DecimalValue subTotalAmount = 6;
+}

@@ -186,9 +186,131 @@ Example Return
 ```
 
 ### 3. Promotion Service
-* Database using SQLite
+
+#### API
+1. **Create Discount Campaign Off 10% for Drink when buying 10 or more Drinks**
+```
+POST: http://localhost:5004/api/DiscountCampaigns
+{
+   "name":"Discount Campaign Off 10% for Drink when buying 10 or more Drinks",
+   "codesAmount":10,
+   "codeType":2,
+   "codePrefix":"OFF10DRINK",
+   "discountCampaignType":2,
+   "discountValue":10,
+   "discountCampaignApplyOn":3,
+   "discountCampaignApplyOnId":"737c9710-e069-436a-a236-660e8277dedf",
+   "startDate":"2021-01-01",
+   "expirationDate":"2022-01-01",
+   "discountValidations":[
+      {
+         "operator":1,
+         "valueType":5,
+         "value":"737c9710-e069-436a-a236-660e8277dedf"
+      },
+      {
+         "operator":2,
+         "valueType":2,
+         "value":"10"
+      }
+   ]
+}
+```
+
+2. **£5.00 off your order when spending £50.00 or more on Baking/Cooking Ingredients**
+```
+POST: http://localhost:5004/api/DiscountCampaigns
+{
+   "name":"£5.00 off your order when spending £50.00 or more on Baking/Cooking Ingredients",
+   "codesAmount":10,
+   "codeType":2,
+   "codePrefix":"LESS50INGREDIENTS",
+   "discountCampaignType":1,
+   "discountValue":5,
+   "discountCampaignApplyOn":1,
+   "startDate":"2021-01-01",
+   "expirationDate":"2022-01-01",
+   "discountValidations":[
+      {
+         "operator":1,
+         "valueType":5,
+         "value":"3786f39a-a229-4689-aed7-d851082cd87a"
+      },
+      {
+         "operator":2,
+         "valueType":3,
+         "value":"50"
+      }
+   ]
+}
+```
+3. **£20.00 off your total order value when spending £100.00 or more and using the code "20OFFPROMO"**
+```
+POST: http://localhost:5004/api/DiscountCampaigns
+{
+   "name":"£20.00 off your total order value when spending £100.00 or more and using the code 20OFFPROMO",
+   "codesAmount":10,
+   "codeType":1,
+   "maxRedeem":100,
+   "singleCode":"20OFFPROMO",
+   "discountCampaignType":1,
+   "discountValue":20,
+   "discountCampaignApplyOn":1,
+   "startDate":"2021-01-01",
+   "expirationDate":"2022-01-01",
+   "discountValidations":[
+      {
+         "operator":2,
+         "valueType":1,
+         "value":"100"
+      }
+   ]
+}
+```
+
 ### 4. Cart Service
-* Database using SQLite
+#### API
+1. **Get My Cart**
+```
+GET: localhost:5002/api/Carts/Me
+Headers
+* Authorization: Bearer <Token>
+```
+2. **Insert Product To Cart**
+```
+POST: localhost:5002/api/Carts/Me
+{
+   "ProductId":"89090eed-5f8d-44bd-ac60-af45256c92ec",
+   "Quantity":5
+}
+```
+3. **Add Product To Cart**
+```
+PUT: localhost:5002/api/Carts/Me
+{
+   "ProductId":"89090eed-5f8d-44bd-ac60-af45256c92ec",
+   "Quantity":5
+}
+```
+4. **Delete Product From Cart**
+```
+DELETE: localhost:5002/api/Carts/Me
+{
+   "ProductId":"89090eed-5f8d-44bd-ac60-af45256c92ec"
+}
+```
+5. **Empty Cart**
+```
+DELETE: localhost:5002/api/Carts/Me/EmptyCart
+```
+6. **Add Coupon Code**
+```
+POST: localhost:5002/api/Carts/Me/DiscountCode
+{
+   "discountCode":"LESS50INGREDIENTS-0MITX"
+}
+```
+
 ### 5. Ordering Service
 TBD (To be developed)
 ### 6. Report Service

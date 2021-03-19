@@ -11,7 +11,7 @@
 * SQLite
 
 ## Sourcode folders
-![enter image description here](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/add-assets/Assets/SourceCodeFolders.png)
+![enter image description here](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/main/Assets/SourceCodeFolders.png)
 
 1. **Common Project**
 * Configuration: The global configurations for any services can use
@@ -36,7 +36,7 @@
 * Microservices
 * Inter communication using gRPC
 
-![System Services](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/add-assets/Assets/Assets.jpg)
+![System Services](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/main/Assets/Assets.jpg)
 
 ### 1. Identity Service
 * ASP.NET Core Identity

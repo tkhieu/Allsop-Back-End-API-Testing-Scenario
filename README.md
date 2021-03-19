@@ -1,4 +1,5 @@
 
+
 # Allsop-Back-End-API-Testing-Scenario
 
 
@@ -9,6 +10,28 @@
 
 ## Database
 * SQLite
+
+## Demo API Call (POSTMAN)
+
+### Important Notes
+#### Server and Ports
+For demo purpose, I hardcode port configuration for easier debug and develop.
+RESTful Ports: Range from `5000` to `5004`
+gRPC Ports: Range from `6000` to `6004`
+
+Please make sure all ports are not occupied.
+
+On IDE, start 4 services `Identity`, `Cart`, `Catalog` and `Promotion` before test.
+
+#### Postman
+* Please use Postman 8 and above (I use 8.0.7)
+* JSON Collection v2.1
+* Run Authenticate Request to populate tokens to Collection variables before doing manual tests
+
+File Location: `PostmanCollection/Allsop.ShoppingCart.Microservices.postman_collection.json`
+
+![enter image description here](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/main/Assets/Postman.png)
+
 
 ## Sourcode folders
 ![enter image description here](https://raw.githubusercontent.com/tkhieu/Allsop-Back-End-API-Testing-Scenario/main/Assets/SourceCodeFolders.png)

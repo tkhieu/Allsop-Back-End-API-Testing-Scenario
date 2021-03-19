@@ -18,14 +18,16 @@ namespace Service.API.Promotion.Services.DiscountCode
             {
                 case CodeType.SingleCode:
                 {
-                    var discountCode = new App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode();
-                    
-                    discountCode.Id = Guid.NewGuid();
-                    discountCode.Code = viewModel.SingleCode;
-                    discountCode.NormalizedCode = viewModel.SingleCode.Normalize();
-                    discountCode.Status = DiscountCodeStatus.Active;
-                    discountCode.MaxRedeem = viewModel.MaxRedeem;
-                    
+                    var discountCode = new App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode
+                    {
+                        Id = Guid.NewGuid(),
+                        Code = viewModel.SingleCode,
+                        NormalizedCode = viewModel.SingleCode.Normalize(),
+                        Status = DiscountCodeStatus.Active,
+                        MaxRedeem = viewModel.MaxRedeem
+                    };
+
+
                     discountCodes.Add(discountCode);
                     
                     break;
@@ -39,7 +41,7 @@ namespace Service.API.Promotion.Services.DiscountCode
                         var discountCode = new App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode
                         {
                             Id = Guid.NewGuid(),
-                            Code = viewModel.CodePrefix + "-" + DiscountCodeHelper.RandomString(5),
+                            Code = $"{viewModel.CodePrefix}-{DiscountCodeHelper.RandomString(5)}",
                             Status = DiscountCodeStatus.Active,
                             MaxRedeem = 1
                         };

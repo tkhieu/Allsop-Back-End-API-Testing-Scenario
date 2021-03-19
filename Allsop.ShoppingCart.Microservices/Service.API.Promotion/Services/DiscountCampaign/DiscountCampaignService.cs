@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using App.Support.Common.Models.PromotionService.DiscountCampaigns;
+using Service.API.Promotion.Repositories.DiscountCampaign;
+using Service.API.Promotion.Repositories.DiscountCode;
 using Service.API.Promotion.Services.DiscountCode;
 using Service.API.Promotion.Services.DiscountValidation;
 using Service.API.Promotion.ViewModels;
@@ -9,13 +13,20 @@ namespace Service.API.Promotion.Services.DiscountCampaign
 {
     public class DiscountCampaignService: IDiscountCampaignService
     {
-        private IDiscountValidationService _discountValidationService;
-        private IDiscountCodeService _discountCodeService;
+        private readonly IDiscountValidationService _discountValidationService;
+        private readonly IDiscountCodeService _discountCodeService;
+        private readonly IDiscountCampaignRepository _discountCampaignRepository;
+        private readonly IDiscountCodeRepository _discountCodeRepository;
 
-        public DiscountCampaignService(DiscountValidationService discountValidationService, DiscountCodeService discountCodeService)
+        public DiscountCampaignService(DiscountValidationService discountValidationService, 
+            DiscountCodeService discountCodeService, 
+            DiscountCampaignRepository discountCampaignRepository,
+            DiscountCodeRepository discountCodeRepository)
         {
             _discountValidationService = discountValidationService;
             _discountCodeService = discountCodeService;
+            _discountCampaignRepository = discountCampaignRepository;
+            _discountCodeRepository = discountCodeRepository;
         }
         
         public App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign GenerateDiscountCampaignFromViewModel(DiscountCampaignRequestViewModel viewModel)
@@ -46,87 +57,30 @@ namespace Service.API.Promotion.Services.DiscountCampaign
             discountCampaign.DiscountCodes = discountCodes;
 
             return discountCampaign;
-            
-            //
-            // switch (model.CodeType)
-            // {
-            //     case CodeType.SingleCode:
-            //     {
-            //         var code = model.SingleCode;
-            //         
-            //     
-            //         Console.WriteLine(model.CodeType);
-            //         Console.WriteLine(code);
-            //         break;
-            //     }
-            //     case CodeType.BulkCodes:
-            //     {
-            //         var codeAmount = model.CodesAmount;
-            //     
-            //         Console.WriteLine(model.CodeType);
-            //         Console.WriteLine(codeAmount);
-            //         break;
-            //     }
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
-            //
-            // switch (model.DiscountCampaignType)
-            // {
-            //     case DiscountCampaignType.Money:
-            //     {
-            //         if (model.DiscountValue != null)
-            //         {
-            //             var discountValue = model.DiscountValue.Value;
-            //             Console.WriteLine(model.DiscountCampaignType);
-            //             Console.WriteLine(discountValue);
-            //         }
-            //         break;
-            //     }
-            //
-            //     case DiscountCampaignType.Percentage:
-            //     {
-            //         if (model.DiscountValue != null)
-            //         {
-            //             var discountValue = model.DiscountValue.Value;
-            //             Console.WriteLine(model.DiscountCampaignType);
-            //             Console.WriteLine(discountValue);
-            //         }
-            //
-            //         break;
-            //     }
-            //
-            //     case DiscountCampaignType.Product:
-            //     {
-            //         if (model.DiscountUnitId != null)
-            //         {
-            //             var discountUnitId = model.DiscountUnitId;
-            //             Console.WriteLine(model.DiscountCampaignType);
-            //             Console.WriteLine(discountUnitId);
-            //         }
-            //         break;
-            //     }
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
-            //
-            // switch (model.DiscountCampaignApplyOn)
-            // {
-            //     case DiscountCampaignApplyOn.Bill:
-            //     {
-            //         break;
-            //     }
-            //     case DiscountCampaignApplyOn.Product:
-            //     {
-            //         break;
-            //     }
-            //     case DiscountCampaignApplyOn.ProductCategory:
-            //     {
-            //         break;
-            //     }
-            //     default:
-            //         throw new ArgumentOutOfRangeException();
-            // }
+        }
+
+        public async Task<bool> CheckDuplicateCampaign(DiscountCampaignRequestViewModel discountCampaignRequestViewModel)
+        {
+            switch (discountCampaignRequestViewModel.CodeType)
+            {
+                case CodeType.BulkCodes:
+                {
+                    var discountCampaign = await _discountCampaignRepository.GetByCodePrefix(discountCampaignRequestViewModel.CodePrefix);
+                    if (discountCampaign != null) return true;
+                }
+                    break;
+                case CodeType.SingleCode:
+                {
+                    var discountCode =
+                        await _discountCodeRepository.GetDiscountCodeByCode(discountCampaignRequestViewModel
+                            .SingleCode);
+                    if (discountCode != null) return true;
+                }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return false;
         }
     }
 }

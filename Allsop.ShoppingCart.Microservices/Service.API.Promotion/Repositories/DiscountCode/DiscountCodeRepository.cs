@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Tasks;
 using App.Support.Common;
@@ -21,6 +24,13 @@ namespace Service.API.Promotion.Repositories.DiscountCode
                await _promotionDbContext.DiscountCodes.FirstOrDefaultAsync(dc => dc.NormalizedCode.Equals(normalizedCode));
 
             return discountCode;
+        }
+
+        public async Task<ICollection<App.Support.Common.Models.PromotionService.DiscountCodes.DiscountCode>> GetDiscountCodesByCampaignId(Guid discountCampaignId)
+        {
+            var discountCodes =
+                await _promotionDbContext.DiscountCodes.Where(dc => dc.DiscountCampaignId == discountCampaignId).ToListAsync();
+            return discountCodes;
         }
     }
 }

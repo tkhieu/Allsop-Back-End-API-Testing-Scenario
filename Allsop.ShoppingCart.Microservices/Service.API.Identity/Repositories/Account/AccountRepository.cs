@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using App.Support.Common.Models;
 using App.Support.Common.Models.IdentityService;
 using Microsoft.AspNetCore.Identity;
@@ -22,9 +23,9 @@ namespace Service.API.Identity.Infrastructure
         {
         }
 
-        public IEnumerable<Account> GetAccounts()
+        public async Task<IEnumerable<Account>> GetAccounts()
         {
-            return _context.Users.ToList();
+            return await _context.Users.ToListAsync();
         }
 
         public Account GetAccountById(int studentId)

@@ -1,4 +1,3 @@
-using App.Support.Common.Models.CatalogService;
 using App.Support.Common.Models.PromotionService.DiscountCampaigns;
 using App.Support.Common.Models.PromotionService.DiscountCodes;
 using App.Support.Common.Models.PromotionService.Redemptions;

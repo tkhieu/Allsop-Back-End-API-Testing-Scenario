@@ -13,7 +13,8 @@ namespace Service.API.Promotion.Services.DiscountValidation
                     Id = Guid.NewGuid(),
                     Operator = viewModel.Operator,
                     ValueType = viewModel.ValueType,
-                    Value = viewModel.Value
+                    Value = viewModel.Value,
+                    Priority =  viewModel.Priority
                 };
             
             return discountValidation;

@@ -9,8 +9,8 @@ namespace Service.API.Promotion.Services.DiscountCampaign
 {
     public class DiscountCampaignService: IDiscountCampaignService
     {
-        private IDiscountValidationService _discountValidationService;
-        private IDiscountCodeService _discountCodeService;
+        private readonly IDiscountValidationService _discountValidationService;
+        private readonly IDiscountCodeService _discountCodeService;
 
         public DiscountCampaignService(DiscountValidationService discountValidationService, DiscountCodeService discountCodeService)
         {

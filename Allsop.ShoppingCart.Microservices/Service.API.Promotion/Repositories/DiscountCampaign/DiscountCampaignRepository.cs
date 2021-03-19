@@ -34,5 +34,10 @@ namespace Service.API.Promotion.Repositories.DiscountCampaign
         {
             return await _promotionDbContext.DiscountCampaigns.ToListAsync();
         }
+
+        public async Task<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign> GetByCodePrefix(string codePrefix)
+        {
+            return await _promotionDbContext.DiscountCampaigns.FirstOrDefaultAsync(c => c.CodePrefix == codePrefix);
+        }
     }
 }

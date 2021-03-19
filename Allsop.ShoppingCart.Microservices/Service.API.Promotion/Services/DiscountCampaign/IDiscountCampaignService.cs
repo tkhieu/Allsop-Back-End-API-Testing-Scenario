@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Service.API.Promotion.ViewModels;
 
 namespace Service.API.Promotion.Services.DiscountCampaign
@@ -7,5 +8,6 @@ namespace Service.API.Promotion.Services.DiscountCampaign
         App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign
             GenerateDiscountCampaignFromViewModel(DiscountCampaignRequestViewModel viewModel);
 
+        Task<bool> CheckDuplicateCampaign(DiscountCampaignRequestViewModel discountCampaign);
     }
 }

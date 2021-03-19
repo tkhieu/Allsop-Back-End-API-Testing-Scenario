@@ -15,5 +15,6 @@ namespace Service.API.Promotion.Repositories.DiscountCampaign
         
         Task<ICollection<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign>> GetAll();
 
+        Task<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign> GetByCodePrefix(string codePrefix);
     }
 }

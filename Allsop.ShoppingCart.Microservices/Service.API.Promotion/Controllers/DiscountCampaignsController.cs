@@ -47,13 +47,25 @@ namespace Service.API.Promotion.Controllers
                 };
             }
 
+            var checkDuplicateCampaign = await _discountCampaignService.CheckDuplicateCampaign(model);
+
+            if (checkDuplicateCampaign)
+            {
+                return new ResultViewModel()
+                {
+                    Status = Status.Error,
+                    Message = "Error: Can not create duplicate CodePrefix or Single Code"
+                };
+            }
+            
             var discountCampaign = _discountCampaignService.GenerateDiscountCampaignFromViewModel(model);
+            
             await _discountCampaignRepository.Insert(discountCampaign);
             
             return new ResultViewModel()
             {
                 Status = Status.Success,
-                Message = "Testing",
+                Message = "Success",
                 Data = discountCampaign
             };
         }

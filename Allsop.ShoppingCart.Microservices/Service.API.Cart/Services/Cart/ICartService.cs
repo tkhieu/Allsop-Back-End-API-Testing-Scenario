@@ -12,6 +12,7 @@ namespace Service.API.Cart.Services.Cart
         App.Support.Common.Models.CartService.Cart GenerateAnEmptyCart(Guid accountId);
         Task<CartViewModel> GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart);
         Task<ValidateDiscountCodeDTO> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode);
+        Task<bool> CheckProductAvailability(Guid productId, long quantity);
         Task<Product> GetProductFromProductId(Guid productId);
         Task<ValidateDiscountCodeDTO> ValidateDiscountCode(App.Support.Common.Models.CartService.Cart cart,
             string discountCode);

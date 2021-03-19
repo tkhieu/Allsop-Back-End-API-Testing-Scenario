@@ -85,9 +85,22 @@ namespace Service.API.Cart.Controllers
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
 
+            var cartViewModel = await _cartService.GenerateCartViewModel(cart);
+            
+            var checkProductAvailability = await _cartService.CheckProductAvailability(Guid.Parse(model.ProductId), model.Quantity);
+            if (!checkProductAvailability)
+            {
+                return new ResultViewModel
+                {
+                    Data = cartViewModel,
+                    Message = "Error: You can not insert a Cart Item with quantity larger than inventory",
+                    Status = Status.Error
+                };
+            }
+
             var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId.ToString() == model.ProductId);
 
-            CartViewModel cartViewModel;
+            
             if (model.Quantity <= 0)
             {
                 cartViewModel = await _cartService.GenerateCartViewModel(cart);
@@ -192,9 +205,21 @@ namespace Service.API.Cart.Controllers
 
             var cart = _cartRepository.GetCartByAccountId(accountId) ??
                        _cartService.GenerateAnEmptyCart(Guid.Parse(accountId));
+            
+            var cartViewModel = await _cartService.GenerateCartViewModel(cart);
+            
+            var checkProductAvailability = await _cartService.CheckProductAvailability(Guid.Parse(model.ProductId), model.Quantity);
+            if (!checkProductAvailability)
+            {
+                return new ResultViewModel
+                {
+                    Data = cartViewModel,
+                    Message = "Error: You can not insert a Cart Item with quantity larger than inventory",
+                    Status = Status.Error
+                };
+            }
+            
             var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId.ToString() == model.ProductId);
-
-            CartViewModel cartViewModel;
             if (cartItem == null && model.Quantity > 0)
             {
                 cartItem = new CartItem

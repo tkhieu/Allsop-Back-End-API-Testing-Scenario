@@ -42,6 +42,12 @@ namespace Service.API.Cart.Services.Cart
             return cart;
         }
 
+        public async Task<bool> CheckProductAvailability(Guid productId, long quantity)
+        {
+            var product = await GetProductFromProductId(productId);
+            return product.InventoryQuantity >= quantity;
+        }
+
         public async Task<Product> GetProductFromProductId(Guid productId)
         {
             var rq = new GetSingleProductRequest()

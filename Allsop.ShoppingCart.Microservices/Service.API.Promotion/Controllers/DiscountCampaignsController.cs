@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using App.Support.Common.Models.PromotionService.DiscountCampaigns;
+﻿using System.Threading.Tasks;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +11,8 @@ namespace Service.API.Promotion.Controllers
     [Route("api/[controller]")]
     public class DiscountCampaignsController : Controller
     {
-        private IDiscountCampaignService _discountCampaignService;
-        private IDiscountCampaignRepository _discountCampaignRepository;
+        private readonly IDiscountCampaignService _discountCampaignService;
+        private readonly IDiscountCampaignRepository _discountCampaignRepository;
 
         public DiscountCampaignsController(DiscountCampaignService discountCampaignService, DiscountCampaignRepository discountCampaignRepository)
         {
@@ -24,9 +22,16 @@ namespace Service.API.Promotion.Controllers
         
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<ResultViewModel> Index()
         {
-            return Ok();
+            var discountCampaigns =  await _discountCampaignRepository.GetAll();
+            
+            return new ResultViewModel()
+            {
+                Status = Status.Success,
+                Message = "Success",
+                Data = discountCampaigns
+            };
         }
         
         [Authorize]
@@ -38,8 +43,7 @@ namespace Service.API.Promotion.Controllers
                 return new ResultViewModel()
                 {
                     Status = Status.Error,
-                    Message = "Invalid Data",
-                    Data = {}
+                    Message = "Invalid Data"
                 };
             }
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service.API.Promotion.Repositories.DiscountCampaign
@@ -11,6 +12,8 @@ namespace Service.API.Promotion.Repositories.DiscountCampaign
         
         Task<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign> GetById(
             Guid discountCampaignId);
+        
+        Task<ICollection<App.Support.Common.Models.PromotionService.DiscountCampaigns.DiscountCampaign>> GetAll();
 
     }
 }

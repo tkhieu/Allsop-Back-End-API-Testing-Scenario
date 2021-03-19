@@ -7,5 +7,8 @@ namespace Service.API.Promotion.ViewModels
         public DiscountValidationOperator Operator { get; set; }
         public DiscountValidationValueType ValueType { get; set; }
         public string Value { get; set; }
+        
+        public int Priority { get; set; }
+        
     }
 }

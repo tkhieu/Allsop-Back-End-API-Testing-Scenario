@@ -172,8 +172,6 @@ namespace Service.API.Cart.Services.Cart
                                         discountCampaign.DiscountValue.Value / 100;
                                 break;
                             }
-                            default:
-                                throw new ArgumentOutOfRangeException();
                         }
                 }
 
@@ -201,14 +199,10 @@ namespace Service.API.Cart.Services.Cart
                                 }
                             }
                                 break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
                         }
 
                         break;
                     }
-                    default:
-                        throw new ArgumentOutOfRangeException();
                 }
             }
 

@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using App.Support.Common.Models.PromotionService.DiscountCodes;
 using App.Support.Common.Models.PromotionService.DiscountValidations;
 using App.Support.Common.Models.PromotionService.Redemptions;
 using App.Support.Common.Protos.Common;
 using App.Support.Common.Protos.Promotion;
-using Google.Protobuf.Collections;
 
 namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
 {
-    public class DiscountCampaign
+    public sealed class DiscountCampaign
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
@@ -25,30 +25,36 @@ namespace App.Support.Common.Models.PromotionService.DiscountCampaigns
         
         public string CodePrefix { get; set; }
         
-        public virtual ICollection<DiscountCode> DiscountCodes { get; set; }
-        public virtual ICollection<Redemption> Redemptions { get; set; }
-        public virtual ICollection<DiscountValidation> DiscountValidations { get; set; }
-        
+        public ICollection<DiscountCode> DiscountCodes { get; set; }
+        public ICollection<Redemption> Redemptions { get; set; }
+
+        public ICollection<DiscountValidation> DiscountValidations { get; set; }
+
+        public IOrderedEnumerable<DiscountValidation> GetSortedDiscountValidations()
+        {
+            return DiscountValidations.OrderBy(p => p.Priority);
+        }
+
         public DiscountCampaignDTO GenerateGrpcDtoFromDiscountCampaign()
         {
             var discountCampaignDto = new DiscountCampaignDTO
             {
-                Id = this.Id.ToString(), Name = this.Name, 
+                Id = Id.ToString(), Name = Name, 
             };
             
-            var discountValue = this.DiscountValue;
-            if (this.CodePrefix != null)
+            var discountValue = DiscountValue;
+            if (CodePrefix != null)
                 discountCampaignDto.CodePrefix = CodePrefix;
             if (discountValue != null)
                 discountCampaignDto.DiscountValue = DecimalValue.FromDecimal(discountValue.Value);
-            discountCampaignDto.StartDate = this.StartDate.ToString();
-            discountCampaignDto.ExpirationDate = this.ExpirationDate.ToString();
-            discountCampaignDto.ApplyOnId = this.ApplyOnId.ToString();
-            discountCampaignDto.DiscountCampaignType = (uint) this.DiscountCampaignType.GetHashCode();
-            discountCampaignDto.DiscountUnitId = this.DiscountUnitId.ToString();
-            discountCampaignDto.DiscountCampaignApplyOn = (uint) this.DiscountCampaignApplyOn.GetHashCode();
+            discountCampaignDto.StartDate = StartDate.ToString();
+            discountCampaignDto.ExpirationDate = ExpirationDate.ToString();
+            discountCampaignDto.ApplyOnId = ApplyOnId.ToString();
+            discountCampaignDto.DiscountCampaignType = (uint) DiscountCampaignType.GetHashCode();
+            discountCampaignDto.DiscountUnitId = DiscountUnitId.ToString();
+            discountCampaignDto.DiscountCampaignApplyOn = (uint) DiscountCampaignApplyOn.GetHashCode();
             
-            foreach (var discountValidation in this.DiscountValidations)
+            foreach (var discountValidation in DiscountValidations)
             {
                 var discountValidationDto = discountValidation.GenerateGrpcDtoFromProductValidation();
                 discountCampaignDto.DiscountValidations.Add(discountValidationDto);

@@ -94,6 +94,9 @@ namespace Service.API.Promotion.Migrations
                     b.Property<int>("Operator")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Value")
                         .HasColumnType("TEXT");
 

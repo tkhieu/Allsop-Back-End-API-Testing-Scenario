@@ -10,6 +10,8 @@ namespace App.Support.Common.Models.PromotionService.DiscountValidations
         public DiscountValidationValueType ValueType { get; set; }
         public string Value { get; set; }
         public Guid DiscountCampaignId { get; set; }
+        
+        public int Priority { get; set; }
 
 
         public DiscountValidationDTO GenerateGrpcDtoFromProductValidation()

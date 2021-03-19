@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using App.Support.Common.gRPC.Clients;
-using App.Support.Common.Models;
 using App.Support.Common.Models.CartService;
 using App.Support.Common.Models.CatalogService;
 using App.Support.Common.Models.PromotionService.DiscountCampaigns;
@@ -17,19 +15,20 @@ using Service.API.Cart.ViewModels.Cart;
 
 namespace Service.API.Cart.Services.Cart
 {
-    public class CartService: ICartService
+    public class CartService : ICartService
     {
         private readonly IGrpcClientFactory _grpcClientFactory;
         private readonly ICartRepository _cartRepository;
         private readonly ICartItemRepository _cartItemRepository;
 
-        public CartService(GrpcClientFactory grpcClientFactory, CartRepository cartRepository, CartItemRepository cartItemRepository)
+        public CartService(GrpcClientFactory grpcClientFactory, CartRepository cartRepository,
+            CartItemRepository cartItemRepository)
         {
             _grpcClientFactory = grpcClientFactory;
             _cartRepository = cartRepository;
             _cartItemRepository = cartItemRepository;
         }
-        
+
         public App.Support.Common.Models.CartService.Cart GenerateAnEmptyCart(Guid accountId)
         {
             var cart = new App.Support.Common.Models.CartService.Cart()
@@ -41,6 +40,12 @@ namespace Service.API.Cart.Services.Cart
             };
 
             return cart;
+        }
+
+        public async Task<bool> CheckProductAvailability(Guid productId, long quantity)
+        {
+            var product = await GetProductFromProductId(productId);
+            return product.InventoryQuantity >= quantity;
         }
 
         public async Task<Product> GetProductFromProductId(Guid productId)
@@ -56,7 +61,7 @@ namespace Service.API.Cart.Services.Cart
 
             return product;
         }
-        
+
         public async Task<ProductDTO> GetProductDtoFromProductId(Guid productId)
         {
             var rq = new GetSingleProductRequest()
@@ -66,7 +71,7 @@ namespace Service.API.Cart.Services.Cart
             var catalogGrpcClient = _grpcClientFactory.CreateCatalogGrpcClient();
             var response = await catalogGrpcClient.GetProductAsync(rq);
             var productDto = response.Product;
-            
+
             return productDto;
         }
 
@@ -96,135 +101,138 @@ namespace Service.API.Cart.Services.Cart
             {
                 await _cartItemRepository.DeleteCartItem(cartItem);
             }
+
             _cartRepository.DeleteCart(cart);
 
             return true;
         }
 
-        public async Task<DiscountCampaignDTO> GetDiscountCampaignDetail(string discountCode)
+        private async Task<DiscountCampaignDTO> GetDiscountCampaignDetail(string discountCode)
         {
             var promotionGrpcClient = _grpcClientFactory.CreatePromotionGrpcClient();
             var discountCampaignDetailRequest = new GetDiscountCampaignDetailRequest()
             {
                 DiscountCode = discountCode
             };
-            var returnSingleDiscountCampaignResponse = await promotionGrpcClient.GetDiscountDetailAsync(discountCampaignDetailRequest);
+            var returnSingleDiscountCampaignResponse =
+                await promotionGrpcClient.GetDiscountDetailAsync(discountCampaignDetailRequest);
 
             return returnSingleDiscountCampaignResponse.DiscountCampaign;
-
         }
-        
+
         public async Task<CartViewModel> GenerateCartViewModel(App.Support.Common.Models.CartService.Cart cart)
         {
-            
-            var discountCampaignDto = await GetDiscountCampaignDetail(cart.DiscountCode);
-            var discountCampaign = DiscountCampaign.GenerateDiscountCampaignFromGrpcDto(discountCampaignDto);
-
-            var isDiscountOnBill = false;
-            var isDiscountOnCategory = false;
             var discountCategory = "";
+            DiscountCampaign discountCampaign = null;
+            DiscountCampaignDTO discountCampaignDto = null;
 
-            switch (discountCampaign.DiscountCampaignApplyOn)
+            if (cart.DiscountCode != null)
             {
-                case DiscountCampaignApplyOn.Bill:
+                discountCampaignDto = await GetDiscountCampaignDetail(cart.DiscountCode);
+                discountCampaign = DiscountCampaign.GenerateDiscountCampaignFromGrpcDto(discountCampaignDto);
+
+                switch (discountCampaign.DiscountCampaignApplyOn)
                 {
-                    isDiscountOnBill = true;
-                    break;
-                }
-                case DiscountCampaignApplyOn.ProductCategory:
-                {
-                    if (discountCampaign.ApplyOnId != null)
+                    case DiscountCampaignApplyOn.Bill:
                     {
-                        discountCategory = discountCampaign.ApplyOnId.Value.ToString();
+                        break;
                     }
-                    isDiscountOnCategory = true;
-                    break;
+                    case DiscountCampaignApplyOn.ProductCategory:
+                    {
+                        if (discountCampaign.ApplyOnId != null)
+                        {
+                            discountCategory = discountCampaign.ApplyOnId.Value.ToString();
+                        }
+
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
-            
+
             var cartViewModel = new CartViewModel(cart);
 
             var subTotalAmount = 0m;
             var discountAmount = 0m;
             var totalAmount = 0m;
-            
+
             foreach (var cartItemViewModel in cartViewModel.CartItems)
             {
                 var productId = cartItemViewModel.ProductId;
                 var product = await GetProductFromProductId(productId);
                 cartItemViewModel.Product = product;
-                
+
                 cartItemViewModel.ItemSubTotalAmount = product.PriceValue * cartItemViewModel.Quantity;
                 subTotalAmount += cartItemViewModel.ItemSubTotalAmount;
 
                 if (cartItemViewModel.Product.Category.Id == discountCategory)
                 {
-                    switch (discountCampaign.DiscountCampaignType)
-                    {
-                        case DiscountCampaignType.Percentage:
+                    if (discountCampaign != null)
+                        switch (discountCampaign.DiscountCampaignType)
                         {
-                            if (discountCampaign.DiscountValue != null)
-                                cartItemViewModel.ItemDiscountAmount = cartItemViewModel.ItemSubTotalAmount *
-                                    discountCampaign.DiscountValue.Value / 100;
-                            break;
+                            case DiscountCampaignType.Percentage:
+                            {
+                                if (discountCampaign.DiscountValue != null)
+                                    cartItemViewModel.ItemDiscountAmount = cartItemViewModel.ItemSubTotalAmount *
+                                        discountCampaign.DiscountValue.Value / 100;
+                                break;
+                            }
                         }
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
                 }
-                
+
                 discountAmount += cartItemViewModel.ItemDiscountAmount;
-                
+
                 cartItemViewModel.ItemTotalAmount =
                     cartItemViewModel.ItemSubTotalAmount - cartItemViewModel.ItemDiscountAmount;
                 totalAmount += cartItemViewModel.ItemTotalAmount;
             }
-            
-            switch (discountCampaign.DiscountCampaignType)
+
+            if (discountCampaign != null)
             {
-                case DiscountCampaignType.Money:
+                switch (discountCampaign.DiscountCampaignType)
                 {
-                    switch (discountCampaign.DiscountCampaignApplyOn)
+                    case DiscountCampaignType.Money:
                     {
-                        case DiscountCampaignApplyOn.Bill:
+                        switch (discountCampaign.DiscountCampaignApplyOn)
                         {
-                            if (discountCampaign.DiscountValue != null)
+                            case DiscountCampaignApplyOn.Bill:
                             {
-                                discountAmount = discountCampaign.DiscountValue.Value;
-                                totalAmount -= discountAmount;
+                                if (discountCampaign.DiscountValue != null)
+                                {
+                                    discountAmount = discountCampaign.DiscountValue.Value;
+                                    totalAmount -= discountAmount;
+                                }
                             }
+                                break;
                         }
+
                         break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
                     }
-                    break;
                 }
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
+
 
             cartViewModel.SubTotalAmount = subTotalAmount;
             cartViewModel.DiscountAmount = discountAmount;
             cartViewModel.TotalAmount = totalAmount;
 
             if (cart.DiscountCode == null) return cartViewModel;
-            
-            cartViewModel.DiscountCampaignDto = discountCampaignDto;
+
+            if (discountCampaign != null)
+                cartViewModel.DiscountCampaignDto = discountCampaignDto;
 
             cartViewModel.AmountUnit = "GPB";
-            
+
             return cartViewModel;
-            
         }
 
-        public async Task<CartDTO> GenerateCartDto(App.Support.Common.Models.CartService.Cart cart)
+        private async Task<CartDTO> GenerateCartDto(App.Support.Common.Models.CartService.Cart cart)
         {
             var subTotalAmount = 0m;
-            var cartDto = new CartDTO {Id = cart.Id, AccountId = cart.AccountId.ToString(), CreatedAt = cart.CreatedAt.ToString()};
-            
+            var cartDto = new CartDTO
+                {Id = cart.Id, AccountId = cart.AccountId.ToString(), CreatedAt = cart.CreatedAt.ToString()};
+
             if (cart.DiscountCode != null)
             {
                 cartDto.DiscountCode = cart.DiscountCode;
@@ -236,12 +244,13 @@ namespace Service.API.Cart.Services.Cart
                 subTotalAmount += cartItemDto.ItemSubTotalAmount.ToDecimal();
                 cartDto.CartItems.Add(cartItemDto);
             }
+
             cartDto.SubTotalAmount = DecimalValue.FromDecimal(subTotalAmount);
 
             return cartDto;
         }
-        
-        public async Task<CartItemDTO> GenerateCartItemDto(CartItem cartItem)
+
+        private async Task<CartItemDTO> GenerateCartItemDto(CartItem cartItem)
         {
             var cartItemDto = new CartItemDTO
             {
@@ -253,22 +262,23 @@ namespace Service.API.Cart.Services.Cart
 
             var productDto = await GetProductDtoFromProductId(Guid.Parse(cartItemDto.ProductId));
             cartItemDto.Product = productDto;
-            
+
             var itemSubTotalAmount = cartItemDto.Quantity * cartItemDto.Product.PriceValue.ToDecimal();
             cartItemDto.ItemSubTotalAmount = DecimalValue.FromDecimal(itemSubTotalAmount);
 
             return cartItemDto;
         }
 
-        public async Task<ValidateDiscountCodeDTO> AddDiscountCodeToCart(App.Support.Common.Models.CartService.Cart cart, string discountCode)
+        public async Task<ValidateDiscountCodeDTO> AddDiscountCodeToCart(
+            App.Support.Common.Models.CartService.Cart cart, string discountCode)
         {
             var validateDiscountCodeDto = await ValidateDiscountCode(cart, discountCode);
 
             if (!validateDiscountCodeDto.IsValid) return validateDiscountCodeDto;
-            
+
             cart.DiscountCode = discountCode;
             await _cartRepository.InsertOrUpdateCart(cart);
-            
+
             return validateDiscountCodeDto;
         }
     }

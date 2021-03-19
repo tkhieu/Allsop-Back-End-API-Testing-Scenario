@@ -1,10 +1,11 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using App.Support.Common.Models.PromotionService.DiscountValidations;
+using App.Support.Common.Protos.Cart;
 using App.Support.Common.Protos.Common;
 using App.Support.Common.Protos.Promotion;
 using Grpc.Core;
-using Microsoft.Extensions.Logging;
 using Service.API.Promotion.Repositories.DiscountCampaign;
 using Service.API.Promotion.Repositories.DiscountCode;
 
@@ -14,60 +15,66 @@ namespace Service.API.Promotion.Services.gRPC
     {
         private readonly DiscountCampaignRepository _discountCampaignRepository;
         private readonly DiscountCodeRepository _discountCodeRepository;
-        private readonly ILogger<PromotionGrpcService> _logger;
 
-        public PromotionGrpcService(ILogger<PromotionGrpcService> logger,
-            DiscountCampaignRepository discountCampaignRepository, DiscountCodeRepository discountCodeRepository)
+        public PromotionGrpcService(DiscountCampaignRepository discountCampaignRepository, DiscountCodeRepository discountCodeRepository)
         {
             _discountCampaignRepository = discountCampaignRepository;
             _discountCodeRepository = discountCodeRepository;
-            _logger = logger;
         }
 
         public override async Task<ReturnSingleDiscountCampaign> GetDiscountDetail(
             GetDiscountCampaignDetailRequest request, ServerCallContext context)
         {
             var discountCode = request.DiscountCode;
-
             var discountCodeObj = await _discountCodeRepository.GetDiscountCodeByCode(discountCode);
 
             var discountCampaignId = discountCodeObj.DiscountCampaignId;
-
             var discountCampaignObj = await _discountCampaignRepository.GetById(discountCampaignId);
 
             var discountCampaignDto = discountCampaignObj.GenerateGrpcDtoFromDiscountCampaign();
-
             var returnSingleDiscountCampaign = new ReturnSingleDiscountCampaign
             {
                 Status = GrpcStatus.Success,
                 DiscountCampaign = discountCampaignDto
             };
-
             return returnSingleDiscountCampaign;
         }
 
         public override async Task<ReturnValidateDiscountCode> ValidateDiscountCode(ValidateDiscountCodeWithCartRequest request, ServerCallContext context)
         {
-            var discountCode = request.DiscountCode;
+            var returnValidateDiscountCode = new ReturnValidateDiscountCode()
+            {
+                Status = GrpcStatus.Success
+            };
             
-            var discountCodeObj = await _discountCodeRepository.GetDiscountCodeByCode(discountCode);
-            
-            var discountCampaignId = discountCodeObj.DiscountCampaignId;
-
-            var discountCampaignObj = await _discountCampaignRepository.GetById(discountCampaignId);
-
-            var cartDto = request.Cart;
-
             var validateDiscountCodeDto = new ValidateDiscountCodeDTO()
             {
                 IsValid = true,
                 Message = "Discount code is valid to use"
             };
             
+            var discountCode = request.DiscountCode;
+            var discountCodeObj = await _discountCodeRepository.GetDiscountCodeByCode(discountCode);
+
+            if (discountCodeObj == null)
+            {
+                validateDiscountCodeDto = new ValidateDiscountCodeDTO()
+                {
+                    IsValid = false,
+                    Message = "Error: Discount code is invalid to use"
+                };
+
+                returnValidateDiscountCode.ValidateDiscountCode = validateDiscountCodeDto;
+                return returnValidateDiscountCode;
+            }
+            
+            var discountCampaignId = discountCodeObj.DiscountCampaignId;
+            var discountCampaignObj = await _discountCampaignRepository.GetById(discountCampaignId);
+
+            var cartDto = request.Cart;
             
             // Check redemptionCount
             var redemptionsCount = discountCodeObj.Redemptions?.Count ?? 0;
-            
             if (discountCodeObj.MaxRedeem == redemptionsCount)
             {
                 validateDiscountCodeDto = new ValidateDiscountCodeDTO()
@@ -76,6 +83,7 @@ namespace Service.API.Promotion.Services.gRPC
                     Message = "This code already excess max redemption"
                 };
             }
+            
             // Check expirationDate
             if (discountCampaignObj.ExpirationDate < DateTime.Now)
             {
@@ -97,110 +105,45 @@ namespace Service.API.Promotion.Services.gRPC
             }
 
             // Check discountValidations
-            var discountValidations = discountCampaignObj.DiscountValidations;
+            var discountValidations = discountCampaignObj.GetSortedDiscountValidations();
 
             var productCatId = "";
-            var productCatName = "";
             foreach (var discountValidation in discountValidations)
             {
                 switch (discountValidation.ValueType)
                 {
                     case DiscountValidationValueType.Bill:
                     {
-                        switch (discountValidation.Operator)
+                        var checkBillDiscountValidation = CheckBillDiscountValidation(discountValidation, cartDto);
+                        if (checkBillDiscountValidation != null)
                         {
-                            case DiscountValidationOperator.MoreThan:
-                            {
-                                if (cartDto.SubTotalAmount < decimal.Parse(discountValidation.Value))
-                                {
-                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
-                                    {
-                                        IsValid = false,
-                                        Message = "Subtotal amount less than discount code condition"
-                                    };
-                                }
-                                break;   
-                            }
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            validateDiscountCodeDto = checkBillDiscountValidation;
                         }
                         break;
                     }
                     
                     case DiscountValidationValueType.ProductCat:
                     {
-                        switch (discountValidation.Operator)
-                        {
-                            case DiscountValidationOperator.Is:
-                            {
-                                productCatId = discountValidation.Value;
-                                break;   
-                            }
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
+                        productCatId = CheckProductCategoryValidation(discountValidation);
                         break;
                     }
                     
                     case DiscountValidationValueType.Quantity:
                     {
-                        switch (discountValidation.Operator)
+                        var checkQuantityValidation  = CheckQuantityValidation(discountValidation, cartDto, productCatId);
+                        if (checkQuantityValidation != null)
                         {
-                            case DiscountValidationOperator.MoreThan:
-                            {
-
-                                var count = 0L;
-                                foreach (var cartItem in cartDto.CartItems)
-                                {
-                                    if (cartItem.Product.Category.Id != productCatId) continue;
-                                    productCatName = cartItem.Product.Category.Name;
-                                    count += cartItem.Quantity;
-                                }
-
-                                if (count < int.Parse(discountValidation.Value))
-                                {
-                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
-                                    {
-                                        IsValid = false,
-                                        Message = $"Product quantity of category {productCatName} less than discount code condition"
-                                    };
-                                }
-                                
-                                break;   
-                            }
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            validateDiscountCodeDto = checkQuantityValidation;
                         }
                         break;
                     }
                     
                     case DiscountValidationValueType.SpendingAmount:
                     {
-                        switch (discountValidation.Operator)
+                        var checkSpendingAmountValidation = CheckSpendingAmountValidation(discountValidation, cartDto, productCatId);
+                        if (checkSpendingAmountValidation != null)
                         {
-                            case DiscountValidationOperator.MoreThan:
-                            {
-                                
-                                var spendingAmount = 0m;
-                                foreach (var cartItem in cartDto.CartItems)
-                                {
-                                    if (cartItem.Product.Category.Id != productCatId) continue;
-                                    productCatName = cartItem.Product.Category.Name;
-                                    spendingAmount += cartItem.ItemSubTotalAmount.ToDecimal();
-                                }
-
-                                if (spendingAmount < decimal.Parse(discountValidation.Value))
-                                {
-                                    validateDiscountCodeDto = new ValidateDiscountCodeDTO()
-                                    {
-                                        IsValid = false,
-                                        Message = $"Spending amount of category {productCatName} less than discount code condition"
-                                    };
-                                }
-                                break;   
-                            }
-                            default:
-                                throw new ArgumentOutOfRangeException();
+                            validateDiscountCodeDto = checkSpendingAmountValidation;
                         }
                         break;
                     }
@@ -208,15 +151,110 @@ namespace Service.API.Promotion.Services.gRPC
                         throw new ArgumentOutOfRangeException();
                 }
             }
-
-
+            
             // Return
-            var returnValidateDiscountCode = new ReturnValidateDiscountCode()
-            {
-                Status = GrpcStatus.Success,
-                ValidateDiscountCode = validateDiscountCodeDto
-            };
+            returnValidateDiscountCode.ValidateDiscountCode = validateDiscountCodeDto;
             return returnValidateDiscountCode;
+        }
+
+        private ValidateDiscountCodeDTO CheckSpendingAmountValidation(App.Support.Common.Models.PromotionService.DiscountValidations.DiscountValidation discountValidation, CartDTO cartDto, string productCatId)
+        {
+            switch (discountValidation.Operator)
+            {
+                case DiscountValidationOperator.MoreThan:
+                {
+                    var productCatName = "";
+                    var spendingAmount = 0m;
+                    foreach (var cartItem in cartDto.CartItems)
+                    {
+                        if (cartItem.Product.Category.Id != productCatId) continue;
+                        productCatName = cartItem.Product.Category.Name;
+                        spendingAmount += cartItem.ItemSubTotalAmount.ToDecimal();
+                    }
+
+                    if (spendingAmount < decimal.Parse(discountValidation.Value))
+                    {
+                        return new ValidateDiscountCodeDTO()
+                        {
+                            IsValid = false,
+                            Message = $"Spending amount of category {productCatName} less than discount code condition (> {discountValidation.Value})"
+                        };
+                    }
+                    break;   
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return null;
+        }
+
+        private ValidateDiscountCodeDTO CheckQuantityValidation(App.Support.Common.Models.PromotionService.DiscountValidations.DiscountValidation discountValidation, CartDTO cartDto, string productCatId)
+        {
+            switch (discountValidation.Operator)
+            {
+                case DiscountValidationOperator.MoreThan:
+                {
+                    var productCatName = "";
+                    var count = 0L;
+                    foreach (var cartItem in cartDto.CartItems)
+                    {
+                        if (cartItem.Product.Category.Id != productCatId) continue;
+                        productCatName = cartItem.Product.Category.Name;
+                        count += cartItem.Quantity;
+                    }
+
+                    if (count < int.Parse(discountValidation.Value))
+                    {
+                        return new ValidateDiscountCodeDTO()
+                        {
+                            IsValid = false,
+                            Message = $"Product quantity of category {productCatName} less than discount code condition (> {discountValidation.Value})"
+                        };
+                    }
+                                
+                    break;   
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return null;
+        }
+
+        private string CheckProductCategoryValidation(App.Support.Common.Models.PromotionService.DiscountValidations.DiscountValidation discountValidation)
+        {
+            switch (discountValidation.Operator)
+            {
+                case DiscountValidationOperator.Is:
+                {
+                    var productCatId = discountValidation.Value;
+                    return productCatId;
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private ValidateDiscountCodeDTO CheckBillDiscountValidation(App.Support.Common.Models.PromotionService.DiscountValidations.DiscountValidation discountValidation, CartDTO cartDto)
+        {
+            switch (discountValidation.Operator)
+            {
+                case DiscountValidationOperator.MoreThan:
+                {
+                    if (cartDto.SubTotalAmount < decimal.Parse(discountValidation.Value))
+                    {
+                        return  new ValidateDiscountCodeDTO()
+                        {
+                            IsValid = false,
+                            Message = "Subtotal amount less than discount code condition"
+                        };
+                    }
+                    break;   
+                }
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return null;
         }
     }
 }

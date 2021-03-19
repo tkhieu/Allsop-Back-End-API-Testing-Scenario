@@ -1,14 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using App.Support.Common.Models;
 using App.Support.Common.Models.IdentityService;
-using App.Support.Common.Shared;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Service.API.Identity.Infrastructure;
 using Service.API.Identity.Services.Account;
 using Service.API.Identity.ViewModels;
 
@@ -19,14 +14,12 @@ namespace Service.API.Identity.Controllers
     {
         private readonly UserManager<Account> _userManager;
         private readonly IAccountService _accountService;
-        private readonly IOptions<AppSettings> _configuration;
 
 
-        public AccountsController(UserManager<Account> userManager, AccountService accountService, IOptions<AppSettings> appSettings)
+        public AccountsController(UserManager<Account> userManager, AccountService accountService)
         {
             this._userManager = userManager;
             this._accountService = accountService;
-            this._configuration = appSettings;
         }
 
         [HttpPost]
@@ -38,19 +31,17 @@ namespace Service.API.Identity.Controllers
                 {
                     Status = Status.Error,
                     Message = "Invalid Data",
-                    Data = {}
+                    Data = { }
                 };
             }
 
-            IdentityResult result = null;
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user != null)
             {
                 return new ResultViewModel()
                 {
                     Status = Status.Error,
-                    Message = "User already exists",
-                    Data = {}
+                    Message = "User already exists"
                 };
             }
 
@@ -61,7 +52,7 @@ namespace Service.API.Identity.Controllers
                 Email = model.Email
             };
 
-            result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
                 return new ResultViewModel()
@@ -71,7 +62,7 @@ namespace Service.API.Identity.Controllers
                     Data = user
                 };
             }
-            
+
             return new ResultViewModel()
             {
                 Status = Status.Error,
@@ -88,18 +79,26 @@ namespace Service.API.Identity.Controllers
                 return new ResultViewModel()
                 {
                     Status = Status.Error,
-                    Message = "Invalid Data",
-                    Data = { }
+                    Message = "Invalid Data"
                 };
             }
 
-            var response = _accountService.Authenticate(model);
+            var response = await _accountService.Authenticate(model);
+
+            if (response != null)
+            {
+                return new ResultViewModel()
+                {
+                    Status = Status.Success,
+                    Message = "Authenticate success",
+                    Data = response
+                };
+            }
 
             return new ResultViewModel()
             {
-                Status = Status.Success,
-                Message = "Authenticate success",
-                Data =  response
+                Status = Status.Error,
+                Message = "Authenticate Error: Wrong email or password",
             };
         }
     }

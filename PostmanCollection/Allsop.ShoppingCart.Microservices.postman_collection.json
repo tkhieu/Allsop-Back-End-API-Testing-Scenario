@@ -1,0 +1,1167 @@
+{
+	"info": {
+		"_postman_id": "2f16771c-4c3b-4bb3-96fa-cf61c7a4c4e8",
+		"name": "Allsop.ShoppingCart.Microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Account Register",
+					"item": [
+						{
+							"name": "Account Register User 1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"user1\",\n  \"email\": \"user1@gmail.com\",\n  \"password\": \"String@User1\",\n  \"confirmPassword\": \"String@User1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Register",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account Register User 2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"user2\",\n  \"email\": \"user2@gmail.com\",\n  \"password\": \"String@User2\",\n  \"confirmPassword\": \"String@User2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Register",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account Register User 3",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"user3\",\n  \"email\": \"user3@gmail.com\",\n  \"password\": \"String@User3\",\n  \"confirmPassword\": \"String@User3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Register",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Register"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account Authenticate",
+					"item": [
+						{
+							"name": "Account 1 Authenticate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var tokenOfUser1 = pm.response.json()[\"data\"][\"token\"]",
+											"pm.collectionVariables.set(\"tokenOfUser1\", tokenOfUser1);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"user1@gmail.com\",\n    \"password\": \"String@User1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Authenticate",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Authenticate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account 2 Authenticate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var tokenOfUser2 = pm.response.json()[\"data\"][\"token\"]",
+											"pm.collectionVariables.set(\"tokenOfUser2\", tokenOfUser2);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"user2@gmail.com\",\n    \"password\": \"String@User2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Authenticate",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Authenticate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Account 3 Authenticate",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var tokenOfUser3 = pm.response.json()[\"data\"][\"token\"]",
+											"pm.collectionVariables.set(\"tokenOfUser3\", tokenOfUser3);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"user3@gmail.com\",\n    \"password\": \"String@User3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Authenticate",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Authenticate"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Wrong password or Email",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"user3@gmail.com\",\n    \"password\": \"String@User3Wrongpwd\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5000/api/Accounts/Authenticate",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"api",
+										"Accounts",
+										"Authenticate"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Catalog",
+			"item": [
+				{
+					"name": "Get All Categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIwZjE2ZTUxLTY3ZjQtNDFjZS1iNTQ1LWFhNTVhMzExZjNiYyIsIm5iZiI6MTYxNTcwODUwMCwiZXhwIjoxNjE4MzAwNTAwLCJpYXQiOjE2MTU3MDg1MDB9.BwtfCqIi_FgP_-TW2uCB3yh0FKWSjQZXJB3nX9lbB7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5001/api/Categories",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Category By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIwZjE2ZTUxLTY3ZjQtNDFjZS1iNTQ1LWFhNTVhMzExZjNiYyIsIm5iZiI6MTYxNTcwODUwMCwiZXhwIjoxNjE4MzAwNTAwLCJpYXQiOjE2MTU3MDg1MDB9.BwtfCqIi_FgP_-TW2uCB3yh0FKWSjQZXJB3nX9lbB7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/api/Categories/5beff28e-bba2-4b1b-9f06-126d6365d4cf",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Categories",
+								"5beff28e-bba2-4b1b-9f06-126d6365d4cf"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Products",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIwZjE2ZTUxLTY3ZjQtNDFjZS1iNTQ1LWFhNTVhMzExZjNiYyIsIm5iZiI6MTYxNTcwODUwMCwiZXhwIjoxNjE4MzAwNTAwLCJpYXQiOjE2MTU3MDg1MDB9.BwtfCqIi_FgP_-TW2uCB3yh0FKWSjQZXJB3nX9lbB7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5001/api/Products",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"Products"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Cart 1: (User 1) Get 10% off bulk drinks – any drinks are 10% off the listed price (including already reduced items) when buying 10 or more",
+					"item": [
+						{
+							"name": "Get Cart 1",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser1}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert 3 Coca-Cola To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser1}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"77e63e97-b41a-4882-9574-52a3738fd93f\",\n  \"Quantity\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add 9 Sparkling Mineral Water To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser1}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"bf7b5f89-a569-4e3d-acb8-04a07e1e1130\",\n  \"Quantity\": 9\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Code OFF10DRINK-BCPO2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser1}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"discountCode\": \"OFF10DRINK-T92PT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me/DiscountCode",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me",
+										"DiscountCode"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart 2: (User 2) £5.00 off your order when spending £50.00 or more on Baking/Cooking Ingredients",
+					"item": [
+						{
+							"name": "Get Cart 2",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert 3 Plain Flour To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"5e0b02d5-a25f-4617-9215-3c646f9b4ae8\",\n  \"Quantity\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert 8 Free-Range Eggs To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"89090eed-5f8d-44bd-ac60-af45256c92ec\",\n  \"Quantity\": 8\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Code LESS5INGREDIENTS-61BRZ",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"discountCode\": \"20OFFPROMO\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me/DiscountCode",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me",
+										"DiscountCode"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cart 3: (User 3) £20.00 off your total order value when spending £100.00 or more and using the code \"20OFFPROMO\"",
+					"item": [
+						{
+							"name": "Get Cart 3",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert 3 Caster Sugar To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"e337af6b-c746-4d04-9dac-f57cc52a6158\",\n  \"Quantity\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add 9 Sparkling Mineral Water To Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"bf7b5f89-a569-4e3d-acb8-04a07e1e1130\",\n  \"Quantity\": 9\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Code 20OFFPROMO",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"discountCode\": \"LESS5INGREDIENTS-61BRZ\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me/DiscountCode",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me",
+										"DiscountCode"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Special Cases",
+					"item": [
+						{
+							"name": "Add Invalid Code",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser2}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"discountCode\": \"LESS5INGREDIENTS-INVALID\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me/DiscountCode",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me",
+										"DiscountCode"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Insert 3 Strawberry Cheesecake To Cart (0 in Inventory)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"16aab369-9e83-49a4-9832-f85b295c58f6\",\n  \"Quantity\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add 5 Granny Smith Apples To Cart (0 in Inventory)",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{tokenOfUser3}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"ProductId\": \"16aab369-9e83-49a4-9832-f85b295c58f6\",\n  \"Quantity\": 3\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:5002/api/Carts/Me",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"Carts",
+										"Me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Promotion",
+			"item": [
+				{
+					"name": "1. Create Discount Campaign Off 10% for Drink when buying 10 or more Drinks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenOfUser1}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{tokenOfUser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Discount Campaign Off 10% for Drink when buying 10 or more Drinks\",\n    \"codesAmount\": 10,\n    \"codeType\": 2,\n    \"codePrefix\": \"OFF10DRINK\",\n    \"discountCampaignType\": 2,\n    \"discountValue\": 10,\n    \"discountCampaignApplyOn\": 3,\n    \"discountCampaignApplyOnId\": \"737c9710-e069-436a-a236-660e8277dedf\",\n    \"startDate\": \"2021-01-01\",\n    \"expirationDate\": \"2022-01-01\",\n    \"discountValidations\": [\n        {\n            \"operator\": 1,\n            \"valueType\": 5,\n            \"value\": \"737c9710-e069-436a-a236-660e8277dedf\",\n            \"priority\": 1\n        },\n        {\n            \"operator\": 2,\n            \"valueType\": 2,\n            \"value\": \"10\",\n            \"priority\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/DiscountCampaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"DiscountCampaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. £5.00 off your order when spending £50.00 or more on Baking/Cooking Ingredients",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenOfUser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"£5.00 off your order when spending £50.00 or more on Baking/Cooking Ingredients\",\n    \"codesAmount\": 10,\n    \"codeType\": 2,\n    \"codePrefix\": \"LESS5INGREDIENTS\",\n    \"discountCampaignType\": 1,\n    \"discountValue\": 5,\n    \"discountCampaignApplyOn\": 1,\n    \"startDate\": \"2021-01-01\",\n    \"expirationDate\": \"2022-01-01\",\n    \"discountValidations\": [\n        {\n            \"operator\": 1,\n            \"valueType\": 5,\n            \"value\": \"3786f39a-a229-4689-aed7-d851082cd87a\",\n            \"priority\": 1\n        },\n        {\n            \"operator\": 2,\n            \"valueType\": 3,\n            \"value\": \"50\",\n            \"priority\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/DiscountCampaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"DiscountCampaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. £20.00 off your total order value when spending £100.00 or more and using the code \"20OFFPROMO\"",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{tokenOfUser1}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"£20.00 off your total order value when spending £100.00 or more and using the code 20OFFPROMO\",\n    \"codesAmount\": 10,\n    \"codeType\": 1,\n    \"maxRedeem\": 100,\n    \"singleCode\": \"20OFFPROMO\",\n    \"discountCampaignType\": 1,\n    \"discountValue\": 20,\n    \"discountCampaignApplyOn\": 1,\n    \"startDate\": \"2021-01-01\",\n    \"expirationDate\": \"2022-01-01\",\n    \"discountValidations\": [\n        {\n            \"operator\": 2,\n            \"valueType\": 1,\n            \"value\": \"100\",\n            \"priority\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5004/api/DiscountCampaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"DiscountCampaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Discount Campaigns",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIwZjE2ZTUxLTY3ZjQtNDFjZS1iNTQ1LWFhNTVhMzExZjNiYyIsIm5iZiI6MTYxNTcwODUwMCwiZXhwIjoxNjE4MzAwNTAwLCJpYXQiOjE2MTU3MDg1MDB9.BwtfCqIi_FgP_-TW2uCB3yh0FKWSjQZXJB3nX9lbB7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5004/api/DiscountCampaigns",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"DiscountCampaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Discount Codes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImIwZjE2ZTUxLTY3ZjQtNDFjZS1iNTQ1LWFhNTVhMzExZjNiYyIsIm5iZiI6MTYxNTcwODUwMCwiZXhwIjoxNjE4MzAwNTAwLCJpYXQiOjE2MTU3MDg1MDB9.BwtfCqIi_FgP_-TW2uCB3yh0FKWSjQZXJB3nX9lbB7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5004/api/DiscountCampaigns/152E5CC6-28A4-4902-B52A-6907669B7438/Codes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5004",
+							"path": [
+								"api",
+								"DiscountCampaigns",
+								"152E5CC6-28A4-4902-B52A-6907669B7438",
+								"Codes"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenOfUser1",
+			"value": ""
+		},
+		{
+			"key": "tokenOfUser2",
+			"value": ""
+		},
+		{
+			"key": "tokenOfUser3",
+			"value": ""
+		}
+	]
+}

@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using App.Support.Common.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service.API.Promotion.Repositories.DiscountCampaign;
+using Service.API.Promotion.Repositories.DiscountCode;
 using Service.API.Promotion.Services.DiscountCampaign;
 using Service.API.Promotion.ViewModels;
 
@@ -13,11 +15,14 @@ namespace Service.API.Promotion.Controllers
     {
         private readonly IDiscountCampaignService _discountCampaignService;
         private readonly IDiscountCampaignRepository _discountCampaignRepository;
+        private readonly IDiscountCodeRepository _discountCodeRepository;
+        
 
-        public DiscountCampaignsController(DiscountCampaignService discountCampaignService, DiscountCampaignRepository discountCampaignRepository)
+        public DiscountCampaignsController(DiscountCampaignService discountCampaignService, DiscountCampaignRepository discountCampaignRepository, DiscountCodeRepository discountCodeRepository)
         {
-            this._discountCampaignService = discountCampaignService;
-            this._discountCampaignRepository = discountCampaignRepository;
+            _discountCampaignService = discountCampaignService;
+            _discountCampaignRepository = discountCampaignRepository;
+            _discountCodeRepository = discountCodeRepository;
         }
         
         [HttpGet]
@@ -26,11 +31,26 @@ namespace Service.API.Promotion.Controllers
         {
             var discountCampaigns =  await _discountCampaignRepository.GetAll();
             
-            return new ResultViewModel()
+            return new ResultViewModel
             {
                 Status = Status.Success,
                 Message = "Success",
                 Data = discountCampaigns
+            };
+        }
+        
+        [HttpGet("{discountCampaignId:Guid}/Codes")]
+        [Authorize]
+        public async Task<ResultViewModel> GetCodes(string discountCampaignId)
+        {
+            var discountCodes =
+                await _discountCodeRepository.GetDiscountCodesByCampaignId(Guid.Parse(discountCampaignId));
+            
+            return new ResultViewModel
+            {
+                Status = Status.Success,
+                Message = "Success",
+                Data = discountCodes
             };
         }
         
@@ -40,7 +60,7 @@ namespace Service.API.Promotion.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Status = Status.Error,
                     Message = "Invalid Data"
@@ -51,7 +71,7 @@ namespace Service.API.Promotion.Controllers
 
             if (checkDuplicateCampaign)
             {
-                return new ResultViewModel()
+                return new ResultViewModel
                 {
                     Status = Status.Error,
                     Message = "Error: Can not create duplicate CodePrefix or Single Code"
@@ -62,7 +82,7 @@ namespace Service.API.Promotion.Controllers
             
             await _discountCampaignRepository.Insert(discountCampaign);
             
-            return new ResultViewModel()
+            return new ResultViewModel
             {
                 Status = Status.Success,
                 Message = "Success",
